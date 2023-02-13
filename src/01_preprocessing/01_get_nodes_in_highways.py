@@ -35,14 +35,15 @@ if __name__ == "__main__":
 
                     if any(highway):
                         for node in nodes:
-                            f.write(f'{node}\n')
+                            ws = " " * (12 - len(str(node)))
+                            f.write(f'{ws}{node}\n')
                             
             if event == 'end':
                 child.clear()
 
     # Windows/Linux
     if os.name == 'nt':
-        os.system(f'cmd /c SORT {FILEPATH}/nodesInHighways.txt /unique /o {FILEPATH}/nodesInHighwaysSorted.txt')
+        os.system(f'cmd /c SORT {FILEPATH}/nodesInHighways.txt  /unique /o {FILEPATH}/nodesInHighwaysSorted.txt')
 
     # MAC
     elif os.name == 'posix':

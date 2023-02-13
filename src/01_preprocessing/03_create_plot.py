@@ -17,7 +17,7 @@ if __name__ == "__main__":
     with open(f'{FILEPATH}/nodesAndPositions.txt', 'r') as nodes:
 
         for line in nodes:
-            list = [float(i) for i in line.split(sep=",")]
+            list = [float(i) for i in line.strip().split(sep=",")]
             coords.append(list[1:])
 
 

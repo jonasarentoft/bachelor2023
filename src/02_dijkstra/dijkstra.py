@@ -23,7 +23,6 @@ if __name__ == "__main__":
 
     FILEPATH = f'../data/processed'
     wantedStartNode = int(args.STARTNODE)
-    
 
     nodesAndPositions = OrderedDict()
 
@@ -45,7 +44,7 @@ if __name__ == "__main__":
         
             
             
-    with open(f'{FILEPATH}/edgesSorted.txt', 'r') as edges:   
+    with open(f'{FILEPATH}/edgesWithDistances.txt', 'r') as edges:   
         for line in edges:
             data = [i for i in line.split(sep=",")]
             fromID, toID, distance = data        
@@ -61,8 +60,10 @@ if __name__ == "__main__":
             
             
             
-    dijkstra(myNodes[wantedStartNode])
-    distances = [myNodes[ID].distance for ID in nodesAndPositions.keys()]
+    distancesDict = dijkstra(myNodes[wantedStartNode])
+    distances = [distancesDict.get(myNodes[ID], -1) for ID in nodesAndPositions.keys()]
+    
+    
     coords = nodesAndPositions.values()
     wantedStartNodeCoords = nodesAndPositions[wantedStartNode]
 

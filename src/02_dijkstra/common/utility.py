@@ -5,31 +5,42 @@ class Node:
         self.value = value
         self.edges = set()
 
-        self.distance = -1
-        self.visited = False
-
     @staticmethod
     def add_edge(a, b, dist):
         a.edges.add((b, dist))
+
         
 def dijkstra(start):
-    h = []
+    heap = []
+    
+    distances = {}
+    
+    distances[start] = 0
 
-    start.distance = 0
+    hq.heappush(heap, (distances[start], start))
 
-    hq.heappush(h, (start.distance, start))
+    while heap:
 
-    while len(h) > 0:
-
-        cur = hq.heappop(h)
+        current = hq.heappop(heap)
+        
+        distance, node = current
+        #print([e for e in current])
+        
 
         # check if the nodes has been updated
-        if cur[0] != cur[1].distance:
+        if distance != distances[node]:
             continue
 
-        for e in cur[1].edges:
-            new_distance = cur[1].distance + e[1]
+        for e in node.edges:
+            
+            edgeNode, edgeDistance = e
+            
+            new_distance = distances[node] + edgeDistance
 
-            if e[0].distance < 0 or new_distance < e[0].distance:
-                e[0].distance = new_distance
-                hq.heappush(h, (new_distance, e[0]))
+            if distances.get(edgeNode) is None or new_distance < distances[edgeNode]:
+                
+                # opdater dictionary
+                distances[edgeNode] = new_distance
+                hq.heappush(heap, (new_distance, edgeNode))
+                
+    return distances
