@@ -68,10 +68,13 @@ if __name__ == "__main__":
     wantedStartNodeCoords = nodesAndPositions[wantedStartNode]
     wantedEndNodeCoords = nodesAndPositions[wantedEndNode]
     nodesInShortestPath = GetPath(wantedEndNode, previousDict)
-    
-    totalDistance = distancesDict.get(myNodes[wantedEndNode])
-    totalDistance = round(totalDistance, 3)
     positionsOfNodesInShortesPath = [nodesAndPositions[node] for node in nodesInShortestPath]
+    
+    if positionsOfNodesInShortesPath:
+        totalDistance = distancesDict.get(myNodes[wantedEndNode])
+        totalDistance = round(totalDistance, 3)
+        
+
     
     plt.rcParams['figure.dpi'] = 400
 
