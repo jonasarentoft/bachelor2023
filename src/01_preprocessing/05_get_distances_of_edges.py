@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     # MAC
     elif os.name == 'posix':
-        os.system(f'SORT {FILEPATH}/edges.txt -o -n {FILEPATH}/edgesSorted.txt')
+        os.system(f'SORT {FILEPATH}/edgesWithPartialCoords.txt -t , -k2 -o {FILEPATH}/edgesWithPartialCoordsSorted.txt')
 
 
     with open(f'{FILEPATH}/edgesWithDistances.txt', 'w') as f:
