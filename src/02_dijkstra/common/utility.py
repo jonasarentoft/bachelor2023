@@ -67,7 +67,7 @@ def dijkstra(start):
                 
                 # opdater dictionary
                 distances[edgeNode] = new_distance
-                previous[edgeNode] = node
+                previous[edgeNode.value] = node.value
                 
                 hq.heappush(heap, (new_distance, edgeNode))
                 

@@ -19,5 +19,9 @@ preprocessing: get_nodes_in_highways get_positions_of_nodes create_plot get_edge
 
 ## Shortest Path
 
+
+
+# start = 1528652289
+# end = 2661991855
 dijkstra:
-	python 02_dijkstra/dijkstra.py --start-node ${STARTNODE}
+	python 02_dijkstra/dijkstra.py --start-node ${STARTNODE} --end-node ${ENDNODE}
