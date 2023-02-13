@@ -4,16 +4,42 @@ class Node:
     def __init__(self, value):
         self.value = value
         self.edges = set()
+        self.tmp = 0
 
     @staticmethod
     def add_edge(a, b, dist):
         a.edges.add((b, dist))
+
+    def __eq__(self, other):
+        return (self.tmp == other.tmp)
+
+    def __ne__(self, other):
+        return (self.tmp != other.tmp)
+
+    def __lt__(self, other):
+        return (self.tmp < other.tmp)
+
+    def __gt__(self, other):
+        return (self.tmp > other.tmp)
+
+    def __le__(self, other):
+        return (self.tmp < other.tmp) or (self.tmp == other.tmp)
+
+    def __ge__(self, other):
+        return (self.tmp > other.tmp) or (self.tmp == other.tmp)
+    
+    def __hash__(self):
+        return hash(repr(self))
+        
+        
+    
 
         
 def dijkstra(start):
     heap = []
     
     distances = {}
+    previous = {}
     
     distances[start] = 0
 
@@ -41,6 +67,19 @@ def dijkstra(start):
                 
                 # opdater dictionary
                 distances[edgeNode] = new_distance
+                previous[edgeNode] = node
+                
                 hq.heappush(heap, (new_distance, edgeNode))
                 
-    return distances
+    return distances, previous
+
+
+def GetPath(target, previousDict):
+    previous = previousDict.get(target)
+    
+    if previous is None:
+        return []
+    
+    else:
+        return [target] + GetPath(previous, previousDict)
+    
