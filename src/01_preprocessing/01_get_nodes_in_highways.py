@@ -2,6 +2,8 @@ import argparse
 import os
 import time
 import xml.etree.ElementTree as ET
+from datetime import datetime
+
 
 import numpy as np
 
@@ -13,6 +15,10 @@ import numpy as np
 #################################################################################
 
 if __name__ == "__main__":
+    CURRENTTIME = datetime.now().strftime("%H:%M:%S")
+    print(f'Pipeline started at {CURRENTTIME}\n')
+    
+    
     STARTTIME = time.time()
     
     # Handle arguments 

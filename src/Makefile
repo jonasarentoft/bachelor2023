@@ -17,9 +17,6 @@ get_distances:
 
 preprocessing: get_nodes_in_highways get_positions_of_nodes create_plot get_edges get_distances
 
-
-
-
 ## Shortest Path
 
 dijkstra:

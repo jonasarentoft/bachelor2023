@@ -5,6 +5,8 @@ import xml.etree.ElementTree as ET
 
 from common.DistanceFormula import DistanceFormula
 
+from datetime import datetime
+
 if __name__ == "__main__":
     STARTTIME = time.time()
     
@@ -78,3 +80,8 @@ if __name__ == "__main__":
     ENDTIME = time.time()
     TOTALTIME = round(ENDTIME - STARTTIME, 3)
     print(f'Took {TOTALTIME} seconds to run \n')
+    
+    
+    CURRENTTIME = datetime.now().strftime("%H:%M:%S")
+    print(f'Pipeline started at {CURRENTTIME}\n')
+    

@@ -22,10 +22,10 @@ if __name__ == "__main__":
 
 
     X = np.array(coords)
+    plt.rcParams['figure.dpi'] = 600
     plt.plot(X[:, 1], X[:, 0], 'o', markersize=0.1)
     plt.xlabel('Longitude')
     plt.ylabel('Latitude')
-    plt.axis('equal')
     plt.savefig(f'../data/plots/plot.png')
     
     ENDTIME = time.time()
