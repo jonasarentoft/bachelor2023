@@ -1,6 +1,8 @@
 import argparse
 import time
 import xml.etree.ElementTree as ET
+from bz2file import BZ2File
+
 
 from common.BinarySearch import (BinarySearchIndex,  # Custom functions
                                  BinarySearchTF)
@@ -30,31 +32,35 @@ if __name__ == "__main__":
     # Løb filerne igennem sideløbende så vi ikke læser node id's ind i hukommelsen
     with open(f'{FILEPATH}/nodesInHighwaysSorted.txt', 'r') as nodes:
         with open(f'{FILEPATH}/nodesAndPositions.txt', 'w') as f:
-            tree = ET.iterparse(f'../data/raw/{args.FILENAME}', events = ('start', 'end'))
+
+            with BZ2File(f'../data/raw/{args.FILENAME}') as xml_file:
+
+        
+                tree = ET.iterparse(xml_file, events = ('start', 'end'))
 
 
-            for node in nodes:
-                node_found = False
-                for event, child in tree:
+                for node in nodes:
+                    node_found = False
+                    for event, child in tree:
 
-                    if event == 'start':
+                        if event == 'start':
 
-                        if child.tag == 'node':
-                        
-                            if child.attrib['id'] == node.strip():  
-                                node_found = True
-                                nodeID = child.attrib['id']
-                                lat = child.attrib['lat']
-                                lon = child.attrib['lon']
+                            if child.tag == 'node':
+                            
+                                if child.attrib['id'] == node.strip():  
+                                    node_found = True
+                                    nodeID = child.attrib['id']
+                                    lat = child.attrib['lat']
+                                    lon = child.attrib['lon']
 
-                                f.write(f'{nodeID}, {lat}, {lon}\n')
-                                break
+                                    f.write(f'{nodeID}, {lat}, {lon}\n')
+                                    break
 
-                    if event == 'end':
-                        child.clear()
-                        
-                if node_found:
-                    continue
+                        if event == 'end':
+                            child.clear()
+                            
+                    if node_found:
+                        continue
                                 
                                     
                     

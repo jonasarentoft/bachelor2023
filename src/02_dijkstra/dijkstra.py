@@ -3,7 +3,7 @@ import heapq as hq
 import time
 from collections import OrderedDict
 from queue import PriorityQueue
-
+import sys
 import matplotlib.colors
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,7 +12,8 @@ from common.utility import GetPath, Node, dijkstra
 
 if __name__ == "__main__":
     STARTTIME = time.time()
-    
+    sys.setrecursionlimit(9000)
+
     # Handle arguments 
     parser = argparse.ArgumentParser(description='Specify wanted start node.')
     parser.add_argument('--start-node', dest='STARTNODE', help='Wanted start node.', required=True)
@@ -62,6 +63,7 @@ if __name__ == "__main__":
             
             
     distancesDict, previousDict = dijkstra(myNodes[wantedStartNode])
+    print(distancesDict.get(myNodes[wantedEndNode]))
     distances = [distancesDict.get(myNodes[ID], -1) for ID in nodesAndPositions.keys()]
 
     coords = nodesAndPositions.values()
@@ -96,3 +98,5 @@ if __name__ == "__main__":
     ENDTIME = time.time()
     TOTALTIME = round(ENDTIME - STARTTIME, 3)
     print(f'Took {TOTALTIME} seconds to run \n')
+
+    

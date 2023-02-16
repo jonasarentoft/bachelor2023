@@ -3,6 +3,7 @@ import os
 import time
 import xml.etree.ElementTree as ET
 from datetime import datetime
+from bz2file import BZ2File
 
 
 import numpy as np
@@ -31,21 +32,26 @@ if __name__ == "__main__":
 
     with open(f'{FILEPATH}/nodesInHighways.txt', 'w') as f:
         
-        tree = ET.iterparse(f'../data/raw/{args.FILENAME}', events = ('start', 'end'))
         
-        for event, child in tree:
-            if event == 'start':
-                if child.tag == 'way':
-                    highway = [grandchild.attrib['k'] == 'highway' for grandchild in child if grandchild.tag == 'tag']
-                    nodes = [grandchild.attrib['ref'] for grandchild in child if grandchild.tag == 'nd']
+        with BZ2File(f'../data/raw/{args.FILENAME}') as xml_file:
 
-                    if any(highway):
-                        for node in nodes:
-                            ws = " " * (12 - len(str(node)))
-                            f.write(f'{ws}{node}\n')
-                            
-            if event == 'end':
-                child.clear()
+        
+            tree = ET.iterparse(xml_file, events = ('start', 'end'))
+            
+            
+            for event, child in tree:
+                if event == 'start':
+                    if child.tag == 'way':
+                        highway = [grandchild.attrib['k'] == 'highway' for grandchild in child if grandchild.tag == 'tag']
+                        nodes = [grandchild.attrib['ref'] for grandchild in child if grandchild.tag == 'nd']
+
+                        if any(highway):
+                            for node in nodes:
+                                ws = " " * (12 - len(str(node)))
+                                f.write(f'{ws}{node}\n')
+                                
+                if event == 'end':
+                    child.clear()
 
     # Windows/Linux
     if os.name == 'nt':

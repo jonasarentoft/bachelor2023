@@ -28,19 +28,21 @@ if __name__ == "__main__":
                 for edge in edges:
                     nodeOne, nodeTwo = edge.strip('\n').split(',')
                     nodeOneInt = int(nodeOne.strip())
+                    
                     while nodeOneInt > nodeID:
                         try:
                             nodeID, lat, lon = nodesAndPos.readline().strip('\n').split(',')
                             nodeID = int(nodeID.strip())
                         except:
                             break
-                    
-                  
-                    f.write(f'{nodeOne},{nodeTwo},{lat},{lon}\n')       
+                    if nodeOneInt == nodeID:
+                        f.write(f'{nodeOne},{nodeTwo},{lat},{lon}\n')  
+                         
 
         # Windows/Linux
     if os.name == 'nt':
-        os.system(f'cmd /c SORT {FILEPATH}/edgesWithPartialCoords.txt /+12 /o {FILEPATH}/edgesWithPartialCoordsSorted.txt')
+        os.system(f'cmd /c SORT {FILEPATH}/edgesWithPartialCoords.txt /+13 /o {FILEPATH}/edgesWithPartialCoordsSorted.txt')
+
 
     # MAC
     elif os.name == 'posix':
@@ -65,18 +67,19 @@ if __name__ == "__main__":
                             nodeID = int(nodeID.strip())
                         except:
                             break
-                    
-                    # Distance Formula
-                    lat1 = float(lat1)
-                    lat2 = float(lat2)
-                    lon1 = float(lon1)
-                    lon2 = float(lon2)
-                    distance = DistanceFormula(lat1, lat2, lon1, lon2)
-                    
-                    nodeOne = nodeOne.strip()
-                    nodeTwo = nodeTwo.strip()
+                    if nodeTwoInt == nodeID:
+                        # Distance Formula
+                        lat1 = float(lat1)
+                        lat2 = float(lat2)
+                        lon1 = float(lon1)
+                        lon2 = float(lon2)
+                        distance = DistanceFormula(lat1, lat2, lon1, lon2)
+                        
+                        nodeOne = nodeOne.strip()
+                        nodeTwo = nodeTwo.strip()
 
-                    f.write(f'{nodeOne},{nodeTwo},{distance}\n')
+                        f.write(f'{nodeOne},{nodeTwo},{distance}\n')
+
     ENDTIME = time.time()
     TOTALTIME = round(ENDTIME - STARTTIME, 3)
     print(f'Took {TOTALTIME} seconds to run \n')
