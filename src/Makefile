@@ -22,6 +22,6 @@ preprocessing: get_nodes_in_highways get_positions_of_nodes create_plot get_edge
 
 
 # start = 1528652289
-# end = 2661991855
+# end = 10275888659
 dijkstra:
 	python 02_dijkstra/dijkstra.py --start-node ${STARTNODE} --end-node ${ENDNODE}
