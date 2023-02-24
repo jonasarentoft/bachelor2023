@@ -12,7 +12,7 @@ from common.utility import GetPath, Node, dijkstra
 
 if __name__ == "__main__":
     STARTTIME = time.time()
-    sys.setrecursionlimit(9000)
+    sys.setrecursionlimit(3000)
 
     # Handle arguments 
     parser = argparse.ArgumentParser(description='Specify wanted start node.')
@@ -34,38 +34,18 @@ if __name__ == "__main__":
             # coords.append(list[1:])
             # nodeIDs.append(list[0])'
             
-            nodesAndPositions[list[0]] = [list[2], list[1]]
+            nodesAndPositions[list[0]] = [list[3], list[2]]
             
             
-    myNodes = {}
-
-    with open(f'{FILEPATH}/nodesInHighwaysSorted.txt', 'r') as nodes:
-        for ID in nodes:
-            ID = int(ID)
-            myNodes[ID] = Node(ID)
-        
+    E = np.loadtxt(f"{FILEPATH}/E.txt", dtype=int)
+    V = np.loadtxt(f"{FILEPATH}/V.txt", dtype=int)
+    W = np.loadtxt(f"{FILEPATH}/W.txt", dtype=float)
             
             
-    with open(f'{FILEPATH}/edgesWithDistances.txt', 'r') as edges:   
-        for line in edges:
-            data = [i for i in line.split(sep=",")]
-            fromID, toID, distance = data        
-            fromID = int(fromID)
-            toID = int(toID)
-            distance = float(distance)
-            
-            # Get Objects
-            fromNode = myNodes[fromID]
-            toNode =  myNodes[toID]
-        
-            Node.add_edge(fromNode, toNode, distance)
-            
-            
-            
-    distancesDict, previousDict = dijkstra(myNodes[wantedStartNode])
-    print(distancesDict.get(myNodes[wantedEndNode]))
-    distances = [distancesDict.get(myNodes[ID], -1) for ID in nodesAndPositions.keys()]
-
+    distancesDict, previousDict = dijkstra(E, V, W, wantedStartNode)
+    print(distancesDict.get(wantedEndNode))
+    distances = [distancesDict.get(ID, -1) for ID in nodesAndPositions.keys()]
+    
     coords = nodesAndPositions.values()
     wantedStartNodeCoords = nodesAndPositions[wantedStartNode]
     wantedEndNodeCoords = nodesAndPositions[wantedEndNode]
@@ -73,7 +53,7 @@ if __name__ == "__main__":
     positionsOfNodesInShortesPath = [nodesAndPositions[node] for node in nodesInShortestPath]
     
     if positionsOfNodesInShortesPath:
-        totalDistance = distancesDict.get(myNodes[wantedEndNode])
+        totalDistance = distancesDict.get(wantedEndNode)
         totalDistance = round(totalDistance, 3)
         
 

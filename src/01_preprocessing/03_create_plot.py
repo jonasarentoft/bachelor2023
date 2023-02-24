@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
         for line in nodes:
             list = [float(i) for i in line.strip().split(sep=",")]
-            coords.append(list[1:])
+            coords.append(list[2:])
 
 
     X = np.array(coords)

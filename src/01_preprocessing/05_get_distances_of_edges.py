@@ -3,6 +3,7 @@ import os
 import time
 import xml.etree.ElementTree as ET
 
+
 from common.DistanceFormula import DistanceFormula
 
 from datetime import datetime
@@ -21,7 +22,7 @@ if __name__ == "__main__":
 
             with open(f'{FILEPATH}/nodesAndPositions.txt', 'r') as nodesAndPos:
 
-                nodeID, lat, lon = nodesAndPos.readline().strip('\n').split(',')
+                id, nodeID, lat, lon = nodesAndPos.readline().strip('\n').split(',')
                 nodeID = int(nodeID.strip())
 
 
@@ -31,15 +32,15 @@ if __name__ == "__main__":
                     
                     while nodeOneInt > nodeID:
                         try:
-                            nodeID, lat, lon = nodesAndPos.readline().strip('\n').split(',')
+                            id, nodeID, lat, lon = nodesAndPos.readline().strip('\n').split(',')
                             nodeID = int(nodeID.strip())
                         except:
                             break
                     if nodeOneInt == nodeID:
-                        f.write(f'{nodeOne},{nodeTwo},{lat},{lon}\n')  
+                        f.write(f'{nodeOne},{nodeTwo},{id},{lat},{lon}\n')  
                          
 
-        # Windows/Linux
+    # Windows/Linux
     if os.name == 'nt':
         os.system(f'cmd /c SORT {FILEPATH}/edgesWithPartialCoords.txt /+13 /o {FILEPATH}/edgesWithPartialCoordsSorted.txt')
 
@@ -55,15 +56,15 @@ if __name__ == "__main__":
 
             with open(f'{FILEPATH}/nodesAndPositions.txt', 'r') as nodesAndPos:
 
-                nodeID, lat2, lon2 = nodesAndPos.readline().strip('\n').split(',')
+                id, nodeID, lat2, lon2 = nodesAndPos.readline().strip('\n').split(',')
                 nodeID = int(nodeID.strip())
 
                 for edge in edges:
-                    nodeOne, nodeTwo, lat1, lon1 = edge.strip('\n').split(',')
+                    nodeOne, nodeTwo, idOne, lat1, lon1 = edge.strip('\n').split(',')
                     nodeTwoInt = int(nodeTwo.strip())
                     while nodeTwoInt > nodeID:
                         try:
-                            nodeID, lat2, lon2 = nodesAndPos.readline().strip('\n').split(',')
+                            id, nodeID, lat2, lon2 = nodesAndPos.readline().strip('\n').split(',')
                             nodeID = int(nodeID.strip())
                         except:
                             break
@@ -77,8 +78,17 @@ if __name__ == "__main__":
                         
                         nodeOne = nodeOne.strip()
                         nodeTwo = nodeTwo.strip()
+                        ws = " " * (8 - len(idOne))
+                        f.write(f'{ws}{idOne},{id},{distance}\n')
+    
+    # Windows/Linux
+    if os.name == 'nt':
+        os.system(f'cmd /c SORT {FILEPATH}/edgesWithDistances.txt /o {FILEPATH}/edgesWithDistances.txt')
 
-                        f.write(f'{nodeOne},{nodeTwo},{distance}\n')
+
+    # MAC
+    elif os.name == 'posix':
+        os.system(f'SORT {FILEPATH}/edgesWithDistances.txt -o {FILEPATH}/edgesWithDistances.txt')
 
     ENDTIME = time.time()
     TOTALTIME = round(ENDTIME - STARTTIME, 3)

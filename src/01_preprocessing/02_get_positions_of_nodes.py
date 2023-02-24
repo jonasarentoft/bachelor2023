@@ -2,7 +2,7 @@ import argparse
 import time
 import xml.etree.ElementTree as ET
 from bz2file import BZ2File
-
+from lxml import etree as ET
 
 from common.BinarySearch import (BinarySearchIndex,  # Custom functions
                                  BinarySearchTF)
@@ -38,7 +38,7 @@ if __name__ == "__main__":
         
                 tree = ET.iterparse(xml_file, events = ('start', 'end'))
 
-
+                i = 0
                 for node in nodes:
                     node_found = False
                     for event, child in tree:
@@ -52,13 +52,15 @@ if __name__ == "__main__":
                                     nodeID = child.attrib['id']
                                     lat = child.attrib['lat']
                                     lon = child.attrib['lon']
-
-                                    f.write(f'{nodeID}, {lat}, {lon}\n')
+                                    
+                                    f.write(f'{i},{nodeID}, {lat}, {lon}\n')
+                                    i+= 1
                                     break
 
                         if event == 'end':
                             child.clear()
-                            
+                            while child.getprevious() is not None:
+                                del child.getparent()[0]
                     if node_found:
                         continue
                                 

@@ -1,4 +1,5 @@
 import heapq as hq
+import sys
 
 class Node:
     def __init__(self, value):
@@ -35,46 +36,44 @@ class Node:
     
 
         
-def dijkstra(start):
+def dijkstra(E,V,W, startnode):
     heap = []
-    
     distances = {}
     previous = {}
+    distances[startnode] = 0
+    hq.heappush(heap, (0, startnode))
     
-    distances[start] = 0
 
-    hq.heappush(heap, (distances[start], start))
+    
+    for i in range(len(V)):
+        distances[i] = 100000
 
     while heap:
-
-        current = hq.heappop(heap)
+        curr_dist, curr_node = hq.heappop(heap)
         
-        distance, node = current
-        #print([e for e in current])
-        
+        try:
+            r = range(V[curr_node], V[curr_node+1])
+        except:
+            r = range(V[curr_node], len(E))
 
-        # check if the nodes has been updated
-        if distance != distances[node]:
-            continue
 
-        for e in node.edges:
+        for i in r:
             
-            edgeNode, edgeDistance = e
+            toNode = E[i]
+            dist = W[i]
             
-            new_distance = distances[node] + edgeDistance
-
-            if distances.get(edgeNode) is None or new_distance < distances[edgeNode]:
-                
-                # opdater dictionary
-                distances[edgeNode] = new_distance
-                previous[edgeNode.value] = node.value
-                
-                hq.heappush(heap, (new_distance, edgeNode))
-                
+            distToNode = distances.get(toNode)
+            new_dist = curr_dist + dist
+            if distToNode == None or distToNode > new_dist:
+                distances[toNode] = new_dist
+                previous[toNode] = curr_node
+                hq.heappush(heap, (new_dist, toNode))
+    
     return distances, previous
 
 
 def GetPath(target, previousDict):
+    
     previous = previousDict.get(target)
     
     if previous is None:

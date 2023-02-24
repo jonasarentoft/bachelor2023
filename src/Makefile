@@ -15,7 +15,10 @@ get_edges:
 get_distances:
 	python 01_preprocessing/05_get_distances_of_edges.py
 
-preprocessing: get_nodes_in_highways get_positions_of_nodes create_plot get_edges get_distances
+create_il:
+	python 01_preprocessing/06_create_incidence_lists.py 
+
+preprocessing: get_nodes_in_highways get_positions_of_nodes create_plot get_edges get_distances create_il
 
 ## Shortest Path
 
