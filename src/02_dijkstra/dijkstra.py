@@ -12,7 +12,7 @@ from common.utility import GetPath, dijkstra
 
 if __name__ == "__main__":
     STARTTIME = time.time()
-    sys.setrecursionlimit(3000)
+    sys.setrecursionlimit(5000)
 
     # Handle arguments 
     parser = argparse.ArgumentParser(description='Specify wanted start node.')
@@ -42,11 +42,9 @@ if __name__ == "__main__":
     W = np.loadtxt(f"{FILEPATH}/W.txt", dtype=float)
             
             
-    distancesDict, previousDict = dijkstra(E, V, W, wantedStartNode, wantedEndNode)
+    distancesDict, previousDict = dijkstra(E, V, W, wantedStartNode)
     print('-->',distancesDict.get(wantedEndNode))
     distances = [distancesDict.get(ID, -1) for ID in nodesAndPositions.keys()]
-
-    print('-->',previousDict.get(wantedEndNode))
     coords = nodesAndPositions.values()
     wantedStartNodeCoords = nodesAndPositions[wantedStartNode]
     wantedEndNodeCoords = nodesAndPositions[wantedEndNode]

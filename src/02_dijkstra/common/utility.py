@@ -1,7 +1,8 @@
 import heapq as hq
+import sys
 
 def GetPath(target, previousDict):
-    
+    sys.setrecursionlimit(9000)
     previous = previousDict.get(target)
     
     if previous is None:
@@ -10,7 +11,7 @@ def GetPath(target, previousDict):
         #print(previous)
         return [target] + GetPath(previous, previousDict)
         
-def dijkstra(E,V,W, startnode, target):
+def dijkstra(E,V,W, startnode):
     heap = []
     distances = {}
     previous = {}
