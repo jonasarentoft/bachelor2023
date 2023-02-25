@@ -8,7 +8,7 @@ import matplotlib.colors
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from common.utility import GetPath, Node, dijkstra
+from common.utility import GetPath, dijkstra
 
 if __name__ == "__main__":
     STARTTIME = time.time()
@@ -42,14 +42,17 @@ if __name__ == "__main__":
     W = np.loadtxt(f"{FILEPATH}/W.txt", dtype=float)
             
             
-    distancesDict, previousDict = dijkstra(E, V, W, wantedStartNode)
-    print(distancesDict.get(wantedEndNode))
+    distancesDict, previousDict = dijkstra(E, V, W, wantedStartNode, wantedEndNode)
+    print('-->',distancesDict.get(wantedEndNode))
     distances = [distancesDict.get(ID, -1) for ID in nodesAndPositions.keys()]
-    
+
+    print('-->',previousDict.get(wantedEndNode))
     coords = nodesAndPositions.values()
     wantedStartNodeCoords = nodesAndPositions[wantedStartNode]
     wantedEndNodeCoords = nodesAndPositions[wantedEndNode]
+    print('-->',previousDict.get(wantedStartNode))
     nodesInShortestPath = GetPath(wantedEndNode, previousDict)
+    print('-->','Path found')
     positionsOfNodesInShortesPath = [nodesAndPositions[node] for node in nodesInShortestPath]
     
     if positionsOfNodesInShortesPath:
