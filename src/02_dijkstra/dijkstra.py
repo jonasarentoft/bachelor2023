@@ -12,8 +12,6 @@ from common.utility import GetPath, dijkstra
 
 if __name__ == "__main__":
     STARTTIME = time.time()
-    sys.setrecursionlimit(5000)
-
     # Handle arguments 
     parser = argparse.ArgumentParser(description='Specify wanted start node.')
     parser.add_argument('--start-node', dest='STARTNODE', help='Wanted start node.', required=True)

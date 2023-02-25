@@ -2,14 +2,14 @@ import heapq as hq
 import sys
 
 def GetPath(target, previousDict):
-    sys.setrecursionlimit(9000)
     previous = previousDict.get(target)
     
-    if previous is None:
-        return [target]
-    else:
-        #print(previous)
-        return [target] + GetPath(previous, previousDict)
+    previous = previousDict.get(target)
+    path = []
+    while previous:
+        path = path + [previous]
+        previous = previousDict.get(previous)
+    return path
         
 def dijkstra(E,V,W, startnode):
     heap = []
