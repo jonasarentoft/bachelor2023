@@ -6,6 +6,7 @@ from queue import PriorityQueue
 import sys
 import matplotlib.colors
 import matplotlib.pyplot as plt
+import matplotlib
 import numpy as np
 import pandas as pd
 from common.utility import GetPath
@@ -65,7 +66,10 @@ if __name__ == "__main__":
         totalDistance = round(totalDistance, 3)
         
 
-    
+    cmap = matplotlib.cm.Blues(np.linspace(0,1,128))
+    cmap = matplotlib.colors.ListedColormap(cmap[10:,:-1])      
+    cmap.set_under('grey')
+    #plt.colorbar(cmap)
     plt.rcParams['figure.dpi'] = 400
 
 
@@ -77,10 +81,10 @@ if __name__ == "__main__":
         plt.title(f'Total travel distance: {totalDistance}km', style = 'italic', fontsize = 12, loc = 'center')
     else:
         plt.title(f'Found no path', style = 'italic')
-    plt.scatter(lon, lat, s = 0.05, c = distances)
-    plt.plot(*zip(*positionsOfNodesInShortesPath), linewidth = 0.5, color = 'red')
-    plt.scatter(wantedStartNodeCoords[0], wantedStartNodeCoords[1], c = 'red')
-    plt.scatter(wantedEndNodeCoords[0], wantedEndNodeCoords[1], c = 'blue')
+    plt.scatter(lon, lat, s = 0.05, c = distances, cmap = cmap, vmin = 0)
+    plt.plot(*zip(*positionsOfNodesInShortesPath), linewidth = 0.5, linestyle = 'dashed', color = 'black')
+    plt.scatter(wantedStartNodeCoords[0], wantedStartNodeCoords[1], c = 'green', s = 2)
+    plt.scatter(wantedEndNodeCoords[0], wantedEndNodeCoords[1], c = 'red', s = 2)
     plt.xlabel('Longitude')
     plt.ylabel('Latitude')
     plt.colorbar()

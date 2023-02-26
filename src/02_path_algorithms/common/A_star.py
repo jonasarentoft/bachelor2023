@@ -7,13 +7,13 @@ def a_star(E, V, W, lat, lon, startNode, endNode):
     distances = {}
     previous = {}
     distances[startNode] = 0
-    hq.heappush(heap, (0, startNode))
+    hq.heappush(heap, (0,0, startNode))
     
     
     latEndNode = lat[endNode]
     lonEndNode = lon[endNode]
     while heap:
-        curr_dist, curr_node = hq.heappop(heap)
+        curr_prio, curr_dist, curr_node = hq.heappop(heap)
 
         
         if curr_node == endNode:
@@ -44,5 +44,5 @@ def a_star(E, V, W, lat, lon, startNode, endNode):
                 
                 
                 priority = new_dist + heuristic
-                hq.heappush(heap, (priority, toNode))
+                hq.heappush(heap, (priority, new_dist, toNode))
     return distances, previous
