@@ -11,14 +11,17 @@ from datetime import datetime
 if __name__ == "__main__":
     STARTTIME = time.time()
 
-
-    # Specify path to processed data
+    parser = argparse.ArgumentParser(description='Get raw data.')
+    parser.add_argument('--raw-data-destination', dest='FILENAME', help='Name of file in the data folder.', required=True)
+    args = parser.parse_args()
+    
     FILEPATH = f'../data/processed'
+    FOLDERNAME = args.FILENAME.split(".")[0]
 
-    with open(f"{FILEPATH}/edgesWithDistances.txt", "r") as edgesAndDistances:
-        with open(f"{FILEPATH}/E.txt", "w") as E:
-            with open(f"{FILEPATH}/V.txt", "w") as V:
-                with open(f"{FILEPATH}/W.txt", "w") as W:
+    with open(f"{FILEPATH}/{FOLDERNAME}/edgesWithDistances.txt", "r") as edgesAndDistances:
+        with open(f"{FILEPATH}/{FOLDERNAME}/E.txt", "w") as E:
+            with open(f"{FILEPATH}/{FOLDERNAME}/V.txt", "w") as V:
+                with open(f"{FILEPATH}/{FOLDERNAME}/W.txt", "w") as W:
         
                     previousNode = -1
 

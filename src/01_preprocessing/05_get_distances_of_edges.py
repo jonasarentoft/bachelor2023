@@ -12,15 +12,18 @@ if __name__ == "__main__":
     STARTTIME = time.time()
     
     # Handle arguments 
-
+    parser = argparse.ArgumentParser(description='Get raw data.')
+    parser.add_argument('--raw-data-destination', dest='FILENAME', help='Name of file in the data folder.', required=True)
+    args = parser.parse_args()
     
     FILEPATH = f'../data/processed'
+    FOLDERNAME = args.FILENAME.split(".")[0]        
 
-    with open(f'{FILEPATH}/edgesWithPartialCoords.txt', 'w') as f:
+    with open(f'{FILEPATH}/{FOLDERNAME}/edgesWithPartialCoords.txt', 'w') as f:
         
-        with open(f'{FILEPATH}/edgesSorted.txt', 'r') as edges:
+        with open(f'{FILEPATH}/{FOLDERNAME}/edgesSorted.txt', 'r') as edges:
 
-            with open(f'{FILEPATH}/nodesAndPositions.txt', 'r') as nodesAndPos:
+            with open(f'{FILEPATH}/{FOLDERNAME}/nodesAndPositions.txt', 'r') as nodesAndPos:
 
                 id, nodeID, lat, lon = nodesAndPos.readline().strip('\n').split(',')
                 nodeID = int(nodeID.strip())
@@ -42,19 +45,17 @@ if __name__ == "__main__":
 
     # Windows/Linux
     if os.name == 'nt':
-        os.system(f'cmd /c SORT {FILEPATH}/edgesWithPartialCoords.txt /+13 /o {FILEPATH}/edgesWithPartialCoordsSorted.txt')
+        os.system(f'cmd /c SORT {FILEPATH}/{FOLDERNAME}/edgesWithPartialCoords.txt /+13 /o {FILEPATH}/{FOLDERNAME}/edgesWithPartialCoordsSorted.txt')
 
 
     # MAC
     elif os.name == 'posix':
-        os.system(f'SORT {FILEPATH}/edgesWithPartialCoords.txt -t , -k2 -o {FILEPATH}/edgesWithPartialCoordsSorted.txt')
+        os.system(f'SORT {FILEPATH}/{FOLDERNAME}/edgesWithPartialCoords.txt -t , -k2 -o {FILEPATH}/{FOLDERNAME}/edgesWithPartialCoordsSorted.txt')
 
 
-    with open(f'{FILEPATH}/edgesWithDistances.txt', 'w') as f:
-        
-        with open(f'{FILEPATH}/edgesWithPartialCoordsSorted.txt', 'r') as edges:
-
-            with open(f'{FILEPATH}/nodesAndPositions.txt', 'r') as nodesAndPos:
+    with open(f'{FILEPATH}/{FOLDERNAME}/edgesWithDistances.txt', 'w') as f:
+        with open(f'{FILEPATH}/{FOLDERNAME}/edgesWithPartialCoordsSorted.txt', 'r') as edges:
+            with open(f'{FILEPATH}/{FOLDERNAME}/nodesAndPositions.txt', 'r') as nodesAndPos:
 
                 id, nodeID, lat2, lon2 = nodesAndPos.readline().strip('\n').split(',')
                 nodeID = int(nodeID.strip())
@@ -83,12 +84,11 @@ if __name__ == "__main__":
     
     # Windows/Linux
     if os.name == 'nt':
-        os.system(f'cmd /c SORT {FILEPATH}/edgesWithDistances.txt /o {FILEPATH}/edgesWithDistances.txt')
-
+        os.system(f'cmd /c SORT {FILEPATH}/{FOLDERNAME}/edgesWithDistances.txt /o {FILEPATH}/{FOLDERNAME}/edgesWithDistances.txt')
 
     # MAC
     elif os.name == 'posix':
-        os.system(f'SORT {FILEPATH}/edgesWithDistances.txt -o {FILEPATH}/edgesWithDistances.txt')
+        os.system(f'SORT {FILEPATH}/{FOLDERNAME}/edgesWithDistances.txt -o {FILEPATH}/{FOLDERNAME}/edgesWithDistances.txt')
 
     ENDTIME = time.time()
     TOTALTIME = round(ENDTIME - STARTTIME, 3)

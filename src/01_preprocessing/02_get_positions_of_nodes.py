@@ -24,14 +24,11 @@ if __name__ == "__main__":
 
     # Specify path to processed data
     FILEPATH = f'../data/processed'
+    FOLDERNAME = args.FILENAME.split(".")[0]
     
-
-    
-
-
     # Løb filerne igennem sideløbende så vi ikke læser node id's ind i hukommelsen
-    with open(f'{FILEPATH}/nodesInHighwaysSorted.txt', 'r') as nodes:
-        with open(f'{FILEPATH}/nodesAndPositions.txt', 'w') as f:
+    with open(f'{FILEPATH}/{FOLDERNAME}/nodesInHighwaysSorted.txt', 'r') as nodes:
+        with open(f'{FILEPATH}/{FOLDERNAME}/nodesAndPositions.txt', 'w') as f:
 
             with BZ2File(f'../data/raw/{args.FILENAME}') as xml_file:
 

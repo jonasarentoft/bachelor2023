@@ -4,6 +4,7 @@ import time
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from bz2file import BZ2File
+import sys
 
 
 import numpy as np
@@ -29,14 +30,26 @@ if __name__ == "__main__":
 
     # Specify path to processed data
     FILEPATH = f'../data/processed'
+    FOLDERNAME = args.FILENAME.split(".")[0]
+    print(FOLDERNAME)
+    
+    FOLDERPATH = f'{FILEPATH}/{FOLDERNAME}'
+    
+    PATHEXISTS = os.path.exists(FOLDERPATH)
+        
+    if not PATHEXISTS:
+        # Create a new directory because it does not exist
+        os.makedirs(FOLDERPATH)
+    
 
-    with open(f'{FILEPATH}/nodesInHighways.txt', 'w') as f:
+    with open(f'{FILEPATH}/{FOLDERNAME}/nodesInHighways.txt', 'w') as f:
         
         
         with BZ2File(f'../data/raw/{args.FILENAME}') as xml_file:
 
         
             tree = ET.iterparse(xml_file, events = ('start', 'end'))
+            
             
             
             for event, child in tree:
@@ -55,11 +68,11 @@ if __name__ == "__main__":
 
     # Windows/Linux
     if os.name == 'nt':
-        os.system(f'cmd /c SORT {FILEPATH}/nodesInHighways.txt  /unique /o {FILEPATH}/nodesInHighwaysSorted.txt')
+        os.system(f'cmd /c SORT {FILEPATH}/{FOLDERNAME}/nodesInHighways.txt  /unique /o {FILEPATH}/{FOLDERNAME}/nodesInHighwaysSorted.txt')
 
     # MAC
     elif os.name == 'posix':
-        os.system(f'SORT {FILEPATH}/nodesInHighways.txt --unique -o {FILEPATH}/nodesInHighwaysSorted.txt')
+        os.system(f'SORT {FILEPATH}/{FOLDERNAME}/nodesInHighways.txt --unique -o {FILEPATH}/{FOLDERNAME}/nodesInHighwaysSorted.txt')
         
     ENDTIME = time.time()
     TOTALTIME = round(ENDTIME - STARTTIME, 3)

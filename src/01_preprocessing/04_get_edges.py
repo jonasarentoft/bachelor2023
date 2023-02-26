@@ -19,12 +19,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     FILEPATH = f'../data/processed'
+    FOLDERNAME = args.FILENAME.split(".")[0]
 
     
 
-        
-    
-    with open(f'{FILEPATH}/edges.txt', 'w') as f:
+    with open(f'{FILEPATH}/{FOLDERNAME}/edges.txt', 'w') as f:
         
         
         with BZ2File(f'../data/raw/{args.FILENAME}') as xml_file:
@@ -63,11 +62,11 @@ if __name__ == "__main__":
                     
     # Windows/Linux
     if os.name == 'nt':
-        os.system(f'cmd /c SORT {FILEPATH}/edges.txt /o {FILEPATH}/edgesSorted.txt')
+        os.system(f'cmd /c SORT {FILEPATH}/{FOLDERNAME}/edges.txt /o {FILEPATH}/{FOLDERNAME}/edgesSorted.txt')
 
     # MAC
     elif os.name == 'posix':
-        os.system(f'SORT {FILEPATH}/edges.txt -o {FILEPATH}/edgesSorted.txt')
+        os.system(f'SORT {FILEPATH}/{FOLDERNAME}/edges.txt -o {FILEPATH}/{FOLDERNAME}/edgesSorted.txt')
                                     
     ENDTIME = time.time()
     TOTALTIME = round(ENDTIME - STARTTIME, 3)
