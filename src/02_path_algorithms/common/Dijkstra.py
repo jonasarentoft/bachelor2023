@@ -1,25 +1,11 @@
 import heapq as hq
-import sys
 
-def GetPath(target, previousDict):
-    previous = previousDict.get(target)
-    
-    previous = previousDict.get(target)
-    path = []
-    while previous:
-        path = path + [previous]
-        previous = previousDict.get(previous)
-    return path
-        
-def dijkstra(E,V,W, startnode):
+def dijkstra(E, V, W, lat, lon, startNode, endNode):
     heap = []
     distances = {}
     previous = {}
-    distances[startnode] = 0
-    hq.heappush(heap, (0, startnode))
-    
-
-    
+    distances[startNode] = 0
+    hq.heappush(heap, (0, startNode))
     
 
     while heap:
@@ -44,7 +30,3 @@ def dijkstra(E,V,W, startnode):
                 hq.heappush(heap, (new_dist, toNode))
     
     return distances, previous
-
-
-
-    
