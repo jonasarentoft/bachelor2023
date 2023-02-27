@@ -43,15 +43,8 @@ if __name__ == "__main__":
     E = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/E.txt', dtype=int)
     V = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/V.txt', dtype=int)
     W = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/W.txt', dtype=float)
-              
-    
-    
-    
-    
+
     distancesDict, previousDict = algorithms[algorithm](E, V, W, lat, lon, wantedStartNode, wantedEndNode)
-    
-    
-    
     
     distances = [distancesDict.get(ID, -1) for ID in range(len(V))]
     #coords = nodesAndPositions.values()

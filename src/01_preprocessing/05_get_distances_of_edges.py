@@ -81,14 +81,6 @@ if __name__ == "__main__":
                         nodeTwo = nodeTwo.strip()
                         ws = " " * (8 - len(idOne))
                         f.write(f'{ws}{idOne},{id},{distance}\n')
-    
-    # Windows/Linux
-    if os.name == 'nt':
-        os.system(f'cmd /c SORT {FILEPATH}/{FOLDERNAME}/edgesWithDistances.txt /o {FILEPATH}/{FOLDERNAME}/edgesWithDistances.txt')
-
-    # MAC
-    elif os.name == 'posix':
-        os.system(f'SORT {FILEPATH}/{FOLDERNAME}/edgesWithDistances.txt -o {FILEPATH}/{FOLDERNAME}/edgesWithDistances.txt')
 
     ENDTIME = time.time()
     TOTALTIME = round(ENDTIME - STARTTIME, 3)

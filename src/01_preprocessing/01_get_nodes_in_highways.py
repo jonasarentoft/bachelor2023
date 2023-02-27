@@ -31,7 +31,6 @@ if __name__ == "__main__":
     # Specify path to processed data
     FILEPATH = f'../data/processed'
     FOLDERNAME = args.FILENAME.split(".")[0]
-    print(FOLDERNAME)
     
     FOLDERPATH = f'{FILEPATH}/{FOLDERNAME}'
     

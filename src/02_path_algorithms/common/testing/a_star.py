@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from common.utility import GetPath
-from common.dijkstra import dijsktra
+from common.dijkstra import dijkstra
 
 if __name__ == "__main__":
     STARTTIME = time.time()
