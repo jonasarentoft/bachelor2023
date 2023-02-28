@@ -10,6 +10,7 @@ from datetime import datetime
 
 if __name__ == "__main__":
     STARTTIME = time.time()
+    print(f'Pipeline started at {STARTTIME}\n')
     
     # Handle arguments 
     parser = argparse.ArgumentParser(description='Get raw data.')
@@ -86,7 +87,5 @@ if __name__ == "__main__":
     TOTALTIME = round(ENDTIME - STARTTIME, 3)
     print(f'Took {TOTALTIME} seconds to run \n')
     
-    
     CURRENTTIME = datetime.now().strftime("%H:%M:%S")
-    print(f'Pipeline started at {CURRENTTIME}\n')
     

@@ -5,7 +5,7 @@ def GetPath(target, previousDict):
     previous = previousDict.get(target)
     
     previous = previousDict.get(target)
-    path = []
+    path = [target]
     while previous:
         path = path + [previous]
         previous = previousDict.get(previous)
