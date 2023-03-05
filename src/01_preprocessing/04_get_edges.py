@@ -1,7 +1,7 @@
 import argparse
 import os
 import time
-import xml.etree.ElementTree as ET
+from lxml import etree as ET
 from bz2file import BZ2File
 #################################################################################  
 
@@ -58,6 +58,9 @@ if __name__ == "__main__":
                                 
                 if event == 'end':
                     child.clear()
+                    child.clear()
+                    while child.getprevious() is not None:
+                        del child.getparent()[0]
                     
                     
     # Windows/Linux

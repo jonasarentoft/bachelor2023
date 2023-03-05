@@ -13,14 +13,14 @@ import datashader as ds
 import colorcet as cc
 from PIL import Image as im
 
-
-
 from common.utility import GetPath
 
 from common.Dijkstra import dijkstra
 from common.A_star import a_star
 from common.Bidirectional import bidirectional
 from common.Bidirectional_A_Star import bidirectional_a_star
+
+from scipy.spatial import ConvexHull
 
 
 if __name__ == "__main__":
@@ -35,8 +35,11 @@ if __name__ == "__main__":
 
     STARTTIME = time.time()
 
-    FILEPATH = f'../data/processed'
-    FOLDERNAME = args.COUNTRY.lower()
+    # FILEPATH = f'../data/processed'
+    # FOLDERNAME = args.COUNTRY.lower()
+    FILEPATH = '/volumes/T7/jonas_bachelor2023'
+    FOLDERNAME = 'europe_data'
+    
     wantedStartNode = int(args.STARTNODE)
     wantedEndNode = int(args.ENDNODE)
     algorithm = args.ALGORITHM.lower()
@@ -81,16 +84,20 @@ if __name__ == "__main__":
     TOTALALGORITHMTIME = round(ALGORITMENDTIME - ALGORITMSTARTTIME, 3)
     print(f'Took {TOTALALGORITHMTIME} seconds to run path find algorithm \n')
     distances = [distancesDict.get(ID, -1) for ID in range(len(V))]
-    #coords = nodesAndPositions.values()
-    wantedStartNodeCoords = [lon[wantedStartNode], lat[wantedStartNode]]
-    wantedEndNodeCoords = [lon[wantedEndNode], lat[wantedEndNode]]
+    
+    points = np.array([(lon[id], lat[id]) for id in distancesDict.keys()])
+
     positionsOfNodesInShortesPath = [[lon[node], lat[node]] for node in nodesInShortestPath]
     
     positionsOfNodesInShortesPathDF = pd.DataFrame(positionsOfNodesInShortesPath, columns = ['x', 'y'], dtype=np.float32)
     if positionsOfNodesInShortesPath:
         print('-->','Path found')
         totalDistance = distancesDict.get(wantedEndNode)
-        totalDistance = round(totalDistance, 3)
+        try:
+            totalDistance = round(totalDistance, 3)
+        except:
+            totalDistance = 0
+    
         
 
     # cmap = matplotlib.cm.Blues(np.linspace(0,1,128))
@@ -100,14 +107,6 @@ if __name__ == "__main__":
     # plt.rcParams['figure.dpi'] = 400
 
 
-    # plt.suptitle(f'{wantedStartNode} ⇒ {wantedEndNode}', fontweight = 'bold', horizontalalignment = 'center')
-
-
-
-    # if positionsOfNodesInShortesPath:
-    #     plt.title(f'Total travel distance: {totalDistance}km', style = 'italic', fontsize = 12, loc = 'center')
-    # else:
-    #     plt.title(f'Found no path', style = 'italic')
     # plt.scatter(lon, lat, s = 0.05, c = distances, cmap = cmap, vmin = 0)
     # plt.plot(*zip(*positionsOfNodesInShortesPath), linewidth = 0.5, linestyle = 'dashed', color = 'black')
     # plt.scatter(wantedStartNodeCoords[0], wantedStartNodeCoords[1], c = 'green', s = 2)
@@ -116,45 +115,80 @@ if __name__ == "__main__":
     # plt.ylabel('Latitude')
     # plt.colorbar()
     
-    maxLat = max(lat)
-    minLat = min(lat)
-    maxLon = max(lon)
-    minLon = min(lon)
     
+    
+    maxLat = max(lat) + 0.5
+    minLat = min(lat) - 0.5
+    maxLon = max(lon) + 0.5
+    minLon = min(lon) - 0.5
+    
+    xScaler = 3000 / (maxLon - minLon)
+    yScaler = 3000 / (maxLat - minLat)
+    
+    wantedStartNodeCoords = [xScaler * (lon[wantedStartNode] - minLon), 3000 - yScaler * (lat[wantedStartNode] - minLat)]
+    wantedEndNodeCoords = [xScaler * (lon[wantedEndNode] - minLon), 3000 - yScaler * (lat[wantedEndNode] - minLat)]
+    #print(points[0])
+    #points = [[xScaler * (x - minLon), 3000 - yScaler * (y - minLat)] for (x,y) in points]
+    #print(points[0])
+    #print(wantedStartNodeCoords, wantedEndNodeCoords)
+    
+    startAndEndPoints = pd.DataFrame([wantedStartNodeCoords, wantedEndNodeCoords], columns = ['x', 'y'])
+    
+    searchedPoints = pd.DataFrame(points, columns = ['x', 'y'])
     
     cvs = ds.Canvas(plot_width=3000, plot_height=3000, x_range=(minLon, maxLon), y_range=(minLat, maxLat))
-    cv1 = ds.Canvas(plot_width=3000, plot_height=3000, x_range=(minLon, maxLon), y_range=(minLat, maxLat))# auto range or provide the `bounds` argument
+    #cv1 = ds.Canvas(plot_width=3000, plot_height=3000, x_range=(minLon, maxLon), y_range=(minLat, maxLat))
     agg = cvs.points(df, 'x', 'y')  # this is the histogram
-    agg1 = cv1.line(positionsOfNodesInShortesPathDF, 'x', 'y', line_width=5)  # this is the histogram
+    agg1 = cvs.line(positionsOfNodesInShortesPathDF, 'x', 'y', line_width=5)
+    agg2 = cvs.points(searchedPoints, 'x', 'y')
     
-    img = ds.tf.set_background(ds.tf.shade(agg, how="cbrt", cmap=cc.fire), "black")#.to_pil() # create a rasterized image
+    img = ds.tf.set_background(ds.tf.shade(agg, how="cbrt", cmap=cc.fire), "black").to_pil() # create a rasterized image
+    path = ds.tf.set_background(ds.tf.shade(agg1, how="log", cmap=cc.fire), "black").to_pil() # create a rasterized image
+    searched = ds.tf.set_background(ds.tf.shade(agg2, how="log", cmap=cc.CET_C1s), "black").to_pil() # create a rasterized image
     
-    path = ds.tf.set_background(ds.tf.shade(agg1, how="log", cmap=cc.fire), "black")#.to_pil() # create a rasterized image
-    
-    
-    # newImage = []
-    # for item in path.getdata():
-    #     if item[:3] == (0, 0, 0):
-    #         newImage.append((0, 0, 0, 0))
-    #     else:
-    #         newImage.append(item)
+    newPath = []
+    for item in path.getdata():
+        if item[:3] == (0, 0, 0):
+            newPath.append((0, 0, 0, 0))
+        else:
+            newPath.append(item)
 
-    # path.putdata(newImage)
+    path.putdata(newPath)
     
+    newSearched = []
+    for item in searched.getdata():
+        if item[:3] == (0, 0, 0):
+            newSearched.append((0, 0, 0, 0))
+        else:
+            newSearched.append(item)
+
+    searched.putdata(newSearched)
     
-
-    # im.alpha_composite(img, path).save("test3.png")
-
+    stackedFirst = im.alpha_composite(img, searched)
+    stacked = im.alpha_composite(stackedFirst, path)
     # img.save("test.png", "PNG")
     
 
     #img.paste(asd)
     
-    stacked = ds.tf.stack(img, path)
+    #stacked = ds.tf.stack(img, path)
     
-    plt.rcParams['figure.dpi'] = 2400
-    plt.imshow(stacked)
+    #plt.rcParams['figure.dpi'] = 2400
+    implot = plt.imshow(stacked)
+    
+    plt.scatter(wantedStartNodeCoords[0], wantedStartNodeCoords[1], color = 'green', s = 1)
+    plt.scatter(wantedEndNodeCoords[0],wantedEndNodeCoords[1], color = 'red', s = 1)
+    #plt.scatter(*zip(*points), color = 'white', s = 0.01, alpha = 0.5)
+    
+    
+    #plt.imshow(stacked)
     plt.axis('off')
+    plt.suptitle(f'{wantedStartNode} ⇒ {wantedEndNode}', fontweight = 'bold', horizontalalignment = 'center')
+
+    if positionsOfNodesInShortesPath:
+        plt.title(f'Total travel distance: {totalDistance}km', style = 'italic', fontsize = 12, loc = 'center')
+    else:
+        plt.title(f'Found no path', style = 'italic')
 
     
     plt.savefig(f'../data/plots/{FOLDERNAME}/{algorithm}_myPlot.png', bbox_inches='tight', dpi = 2400)

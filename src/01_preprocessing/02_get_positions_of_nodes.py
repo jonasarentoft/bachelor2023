@@ -1,6 +1,6 @@
 import argparse
 import time
-import xml.etree.ElementTree as ET
+#import xml.etree.ElementTree as ET
 from bz2file import BZ2File
 from lxml import etree as ET
 
