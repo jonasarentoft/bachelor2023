@@ -26,8 +26,21 @@ preprocessing: get_nodes_in_highways get_positions_of_nodes create_plot get_edge
 
 # start = 1528652289
 # end = 10275888659
+
 dijkstra:
-	python 02_dijkstra/dijkstra.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY}
+	python 02_path_algorithms/01_run_path_algorithm.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY} --algorithm dijkstra
+
+bidirectional:
+	python 02_path_algorithms/01_run_path_algorithm.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY} --algorithm bidirectional
 
 a_star:
-	python 02_path_algorithms/run_path_algorithm.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY} --algorithm ${ALGORITHM}
+	python 02_path_algorithms/01_run_path_algorithm.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY} --algorithm a_star
+
+bidirectional_a_star:
+	python 02_path_algorithms/01_run_path_algorithm.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY} --algorithm bidirectional_a_star
+
+
+plot:
+	python 02_path_algorithms/02_plot_results.py --country ${COUNTRY}
+
+run_all: dijkstra bidirectional a_star bidirectional_a_star

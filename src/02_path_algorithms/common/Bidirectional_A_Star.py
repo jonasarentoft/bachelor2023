@@ -49,7 +49,6 @@ def bidirectional_a_star(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endN
                     
                     heuristic = DistanceFormula(latToNode, latEndNode, lonToNode, lonEndNode)
                     
-                    
                     priority = new_dist + heuristic
                     
                     hq.heappush(forwardHeap, (priority, new_dist, toNode))
@@ -81,13 +80,9 @@ def bidirectional_a_star(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endN
                     
                     heuristic = DistanceFormula(latToNode, latStarNode, lonToNode, lonStartNode)
                     
-                    
                     priority = new_dist + heuristic
                     
                     hq.heappush(backwardHeap, (priority, new_dist, toNode))
 
         if intersection:
-            intersection = (backwardDistances.keys() & forwardDistances.keys())
-            intersection = int(list(intersection)[0])
-            path = GetPath(intersection, backwardPrevious)[::-1] + [intersection] + GetPath(intersection, forwardPrevious)
-            return path, (forwardDistances | backwardDistances)
+            return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious

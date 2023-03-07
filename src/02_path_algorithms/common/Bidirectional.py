@@ -24,6 +24,7 @@ def bidirectional(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endNode):
                 r = range(V[currForwardNode], V[currForwardNode+1])
             except:
                 r = range(V[currForwardNode], len(E))
+                
             for i in r:
                 toNode = E[i]
                 if backwardDistances.get(toNode) != None:
@@ -61,7 +62,5 @@ def bidirectional(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endNode):
                     hq.heappush(backwardHeap, (new_dist, toNode))
 
         if intersection:
-            intersection = (backwardDistances.keys() & forwardDistances.keys())
-            intersection = int(list(intersection)[0])
-            path = GetPath(intersection, backwardPrevious)[::-1] + [intersection] + GetPath(intersection, forwardPrevious)
-            return path, (forwardDistances | backwardDistances)
+            return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious
+        
