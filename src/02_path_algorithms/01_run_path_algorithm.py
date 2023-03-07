@@ -15,10 +15,10 @@ from PIL import Image as im
 
 from common.utility import GetPath
 
-from common.Dijkstra import dijkstra
-from common.A_star import a_star
-from common.Bidirectional import bidirectional
-from common.Bidirectional_A_Star import bidirectional_a_star
+from common.algorithms.Dijkstra import dijkstra
+from common.algorithms.A_star import a_star
+from common.algorithms.Bidirectional import bidirectional
+from common.algorithms.Bidirectional_A_Star import bidirectional_a_star
 
 from common.GetAddress import GetAddress
 from common.GetDataForBidrectional import GetDataForBidirectional
@@ -80,7 +80,7 @@ if __name__ == "__main__":
         forwardDistances, backwardDistances, forwardPrevious, backwardPrevious = algorithms[algorithm](E, V, W, E_rev, V_rev, W_rev, lat, lon, wantedStartNode, wantedEndNode)
         ALGORITMENDTIME = time.time()
         
-        distancesDict, nodesInShortestPath = GetDataForBidirectional(forwardDistances, backwardDistances, forwardPrevious, backwardPrevious)
+        distancesDict, nodesInShortestPath, totalDistance  = GetDataForBidirectional(forwardDistances, backwardDistances, forwardPrevious, backwardPrevious)
         
     else:
         ALGORITMSTARTTIME = time.time()
@@ -88,12 +88,9 @@ if __name__ == "__main__":
         ALGORITMENDTIME = time.time()
         
         nodesInShortestPath = GetPath(wantedEndNode, previousDict)
+        totalDistance = distancesDict.get(wantedEndNode)
         
     print(f'Number of nodes in shortest path: {len(nodesInShortestPath)}({algorithm})')
-    file = open(f'{algorithm}.txt','w')
-    for item in nodesInShortestPath:
-        file.write(str(item) + ',')
-    file.close()
     
     TOTALALGORITHMTIME = round(ALGORITMENDTIME - ALGORITMSTARTTIME, 2)
     print(f'Took {TOTALALGORITHMTIME} seconds to run path find algorithm \n')
@@ -107,7 +104,6 @@ if __name__ == "__main__":
     positionsOfNodesInShortesPathDF = pd.DataFrame(positionsOfNodesInShortesPath, columns = ['x', 'y'], dtype=np.float32)
     if positionsOfNodesInShortesPath:
         print('-->','Path found')
-        totalDistance = distancesDict.get(wantedEndNode)
         try:
             totalDistance = round(totalDistance, 3)
         except:

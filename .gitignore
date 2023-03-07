@@ -2,6 +2,7 @@
 *.xml
 *.osm
 *.csv
+*.ipynb
 
 data/*
 *.DS_Store
