@@ -20,47 +20,46 @@ if __name__ == "__main__":
     
     FILEPATH = f'../data/processed'
     FOLDERNAME = args.FILENAME.split(".")[0]        
-    FILEPATH = f'./data/processed/europe.tmp'
+    #FILEPATH = f'./data/processed/europe.tmp'
     
-    mypath = '/volumes/T7/jonas_bachelor2023/europe_data'
 
-    # with open(f'{mypath}/edgesWithPartialCoords.txt', 'w') as f:
+    with open(f'{FILEPATH}/{FOLDERNAME}/edgesWithPartialCoords.txt', 'w') as f:
         
-    #     with open(f'{mypath}/edgesSorted.txt', 'r') as edges:
+        with open(f'{FILEPATH}/{FOLDERNAME}/edgesSorted.txt', 'r') as edges:
 
-    #         with open(f'{mypath}/nodesAndPositions.txt', 'r') as nodesAndPos:
+            with open(f'{FILEPATH}/{FOLDERNAME}/nodesAndPositions.txt', 'r') as nodesAndPos:
 
-    #             id, nodeID, lat, lon = nodesAndPos.readline().strip('\n').split(',')
-    #             nodeID = int(nodeID.strip())
+                id, nodeID, lat, lon = nodesAndPos.readline().strip('\n').split(',')
+                nodeID = int(nodeID.strip())
 
 
-    #             for edge in edges:
-    #                 nodeOne, nodeTwo = edge.strip('\n').split(',')
-    #                 nodeOneInt = int(nodeOne.strip())
+                for edge in edges:
+                    nodeOne, nodeTwo = edge.strip('\n').split(',')
+                    nodeOneInt = int(nodeOne.strip())
                     
-    #                 while nodeOneInt > nodeID:
-    #                     try:
-    #                         id, nodeID, lat, lon = nodesAndPos.readline().strip('\n').split(',')
-    #                         nodeID = int(nodeID.strip())
-    #                     except:
-    #                         break
-    #                 if nodeOneInt == nodeID:
-    #                     f.write(f'{nodeOne},{nodeTwo},{id},{lat},{lon}\n')  
+                    while nodeOneInt > nodeID:
+                        try:
+                            id, nodeID, lat, lon = nodesAndPos.readline().strip('\n').split(',')
+                            nodeID = int(nodeID.strip())
+                        except:
+                            break
+                    if nodeOneInt == nodeID:
+                        f.write(f'{nodeOne},{nodeTwo},{id},{lat},{lon}\n')  
                          
 
-    # Windows/Linux
-    # if os.name == 'nt':
-    #     os.system(f'cmd /c SORT {FILEPATH}/{FOLDERNAME}.tmp/edgesWithPartialCoords.txt /+13 /o {FILEPATH}/{FOLDERNAME}.tmp/edgesWithPartialCoordsSorted.txt')
+    #Windows/Linux
+    if os.name == 'nt':
+        os.system(f'cmd /c SORT {FILEPATH}/{FOLDERNAME}/edgesWithPartialCoords.txt /+13 /o {FILEPATH}/{FOLDERNAME}/edgesWithPartialCoordsSorted.txt')
 
 
-    # MAC
-    # elif os.name == 'posix':
-    #     os.system(f'SORT {FILEPATH}/{FOLDERNAME}.tmp/edgesWithPartialCoords.txt -t , -k2 -o {FILEPATH}/{FOLDERNAME}.tmp/edgesWithPartialCoords.txt -T /volumes/T7/jonas_bachelor2023/TEMP ')
+    #MAC
+    elif os.name == 'posix':
+        os.system(f'SORT {FILEPATH}/{FOLDERNAME}/edgesWithPartialCoords.txt -t , -k2 -o {FILEPATH}/{FOLDERNAME}/edgesWithPartialCoordsSorted.txt')
 
 
-    with open(f'{mypath}/edgesWithDistances.txt', 'w') as f:
-        with open(f'{mypath}/edgesWithPartialCoordsSorted.txt', 'r') as edges:
-            with open(f'{mypath}/nodesAndPositions.txt', 'r') as nodesAndPos:
+    with open(f'{FILEPATH}/{FOLDERNAME}/edgesWithDistances.txt', 'w') as f:
+        with open(f'{FILEPATH}/{FOLDERNAME}/edgesWithPartialCoordsSorted.txt', 'r') as edges:
+            with open(f'{FILEPATH}/{FOLDERNAME}/nodesAndPositions.txt', 'r') as nodesAndPos:
 
                 id, nodeID, lat2, lon2 = nodesAndPos.readline().strip('\n').split(',')
                 nodeID = int(nodeID.strip())

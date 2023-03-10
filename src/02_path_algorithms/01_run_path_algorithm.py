@@ -77,10 +77,10 @@ if __name__ == "__main__":
         print(f'Loaded Reversed Weights')
         
         ALGORITMSTARTTIME = time.time()
-        forwardDistances, backwardDistances, forwardPrevious, backwardPrevious = algorithms[algorithm](E, V, W, E_rev, V_rev, W_rev, lat, lon, wantedStartNode, wantedEndNode)
+        forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, intersection = algorithms[algorithm](E, V, W, E_rev, V_rev, W_rev, lat, lon, wantedStartNode, wantedEndNode)
         ALGORITMENDTIME = time.time()
         
-        distancesDict, nodesInShortestPath, totalDistance  = GetDataForBidirectional(forwardDistances, backwardDistances, forwardPrevious, backwardPrevious)
+        distancesDict, nodesInShortestPath, totalDistance  = GetDataForBidirectional(forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, intersection)
         
     else:
         ALGORITMSTARTTIME = time.time()

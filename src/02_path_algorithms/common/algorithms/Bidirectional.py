@@ -17,50 +17,59 @@ def bidirectional(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endNode):
     backwardDistances = {}
     backwardPrevious = {}
     backwardDistances[endNode] = 0
-
+    u = 100000
     while forwardHeap or backwardHeap:
         if forwardHeap:
             currForwardDist, currForwardNode = hq.heappop(forwardHeap)
-            try:
-                r = range(V[currForwardNode], V[currForwardNode+1])
-            except:
-                r = range(V[currForwardNode], len(E))
+            
+            r = range(V[currForwardNode], V[currForwardNode+1])
+            
                 
             for i in r:
                 toNode = E[i]
-                if backwardDistances.get(toNode) != None:
-                    intersection = True
                 dist = W[i]
                 
                 distToNode = forwardDistances.get(toNode)
                 new_dist = currForwardDist + dist
+                
+        
                 if distToNode == None or distToNode > new_dist:
+                    if backwardDistances.get(toNode) and backwardDistances.get(toNode) + new_dist < u:
+                        intersection = toNode
+                        u = backwardDistances.get(toNode) + new_dist
                     forwardDistances[toNode] = new_dist
                     forwardPrevious[toNode] = currForwardNode
                     hq.heappush(forwardHeap, (new_dist, toNode))
-                      
+
         if backwardHeap:
             currBackwardDist, currBackwardNode = hq.heappop(backwardHeap)
 
-            try:
-                r = range(V_rev[currBackwardNode], V_rev[currBackwardNode+1])
-            except:
-                r = range(V_rev[currBackwardNode], len(E_rev))
+            
+            r = range(V_rev[currBackwardNode], V_rev[currBackwardNode+1])
+            
 
 
             for i in r:
 
                 toNode = E_rev[i]
-                if forwardDistances.get(toNode) != None:
-                    intersection = True
+                
                 dist = W_rev[i]
 
                 distToNode = backwardDistances.get(toNode)
                 new_dist = currBackwardDist + dist
                 if distToNode == None or distToNode > new_dist:
+                    if forwardDistances.get(toNode) and forwardDistances.get(toNode) + new_dist < u:
+                        intersection = toNode
+                        u = forwardDistances.get(toNode) + new_dist
                     backwardDistances[toNode] = new_dist
                     backwardPrevious[toNode] = currBackwardNode
                     hq.heappush(backwardHeap, (new_dist, toNode))
 
-        if intersection:
-            return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious
+        if not forwardHeap or not backwardHeap:
+            return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, None
+        
+        if u < forwardHeap[0][0] + backwardHeap[0][0]:
+            print((backwardDistances.keys() & forwardDistances.keys()))
+            return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, intersection
+        
+    
