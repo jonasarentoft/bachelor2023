@@ -44,11 +44,10 @@ def alt(E, V, W, lat, lon, startNode, endNode, distancesToLandmarks, distancesFr
                 lonToNode = lon[toNode]
                 
                 
-                #pi_plus = max([distancesToLandmarks[landmark][toNode] - distancesToLandmarks[landmark][endNode] for landmark in distancesToLandmarks])
-                #pi_minus = max([distancesFromLandmarks[landmark][endNode] - distancesFromLandmarks[landmark][toNode] for landmark in distancesFromLandmarks])
-                
-                pi_plus = max(distancesToLandmarks[0][toNode] - distancesToLandmarks[0][endNode])
-                pi_minus = max(distancesFromLandmarks[0][endNode] - distancesFromLandmarks[0][toNode])
+                pi_plus = max([distancesToLandmarks[landmark][toNode] - distancesToLandmarks[landmark][endNode] for landmark in distancesToLandmarks])
+                pi_minus = max([distancesFromLandmarks[landmark][endNode] - distancesFromLandmarks[landmark][toNode] for landmark in distancesFromLandmarks])
+                pi_plus = np.nan_to_num(pi_plus, 0)
+                pi_minus = np.nan_to_num(pi_minus, 0)
                 
                 heuristic = max(pi_plus,pi_minus)
                 

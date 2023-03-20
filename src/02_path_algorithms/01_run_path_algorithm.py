@@ -97,12 +97,15 @@ if __name__ == "__main__":
         N = int(args.N)
         distancesToLandmarks = {}
         distancesFromLandmarks = {}
+        fileName = f'{FILEPATH}/{FOLDERNAME}/landmarks'
+        
+        landmarks = np.loadtxt(f'{fileName}/landmarkIDs.txt', delimiter=',', dtype=int)[0:N]
+        
+        
         for i in range(N):
-    
-            fileName = f'{FILEPATH}/{FOLDERNAME}/landmarks/L{i}.txt'
-            distancesToLandmarks[i] = np.loadtxt(fileName, delimiter=',', usecols=(1), unpack=True, dtype=np.float32)
+            distancesToLandmarks[i] = np.loadtxt(f'{fileName}/L{i}.txt', delimiter=',', usecols=(1), unpack=True, dtype=np.float32)
             print(f'Loaded Distances to Landmarks for node {i}')
-            distancesFromLandmarks[i] = np.loadtxt(fileName, delimiter=',', usecols=(0), unpack=True, dtype=np.float32)
+            distancesFromLandmarks[i] = np.loadtxt(f'{fileName}/L{i}.txt', delimiter=',', usecols=(0), unpack=True, dtype=np.float32)
             print(f'Loaded Distances from Landmarks for node {i}')
             
         ALGORITMSTARTTIME = time.time()
@@ -191,8 +194,10 @@ if __name__ == "__main__":
     xs = [xScaler * (x - newMinLon) for x in xs]
     ys = [3000 - yScaler * (y - newMinLat) for y in ys]
     
-    randomxs = [xScaler * (x - newMinLon) for x in randomxs]
-    randomys = [3000 - yScaler * (y - newMinLat) for y in randomys]
+    landmarkspos = [[lon[node], lat[node]] for node in landmarks]
+    
+    randomxs = [xScaler * (x - newMinLon) for [x, _] in landmarkspos]
+    randomys = [3000 - yScaler * (y - newMinLat) for [_, y] in landmarkspos]
     
 
     wantedStartNodeCoords = [xScaler * (lon[wantedStartNode] - newMinLon), 3000 - yScaler * (lat[wantedStartNode] - newMinLat)]
@@ -219,7 +224,7 @@ if __name__ == "__main__":
     plt.scatter(wantedStartNodeCoords[0], wantedStartNodeCoords[1], color = 'green', s = 4)
     plt.scatter(wantedEndNodeCoords[0],wantedEndNodeCoords[1], color = 'blue', s = 4)
     #plt.scatter(xs, ys, color = 'white', s = 4, marker="+")
-    #plt.scatter(randomxs, randomys, color = 'orange', s = 3, marker="D")
+    plt.scatter(randomxs, randomys, color = 'orange', s = 3, marker="D")
     
     plt.gcf().set_facecolor("black")
     plt.axis('off')

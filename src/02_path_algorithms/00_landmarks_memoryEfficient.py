@@ -50,6 +50,7 @@ if __name__ == "__main__":
     print(f'Loaded Weights')
     
     numberOfVertices = len(V) - 1
+    landmarks = []
    
     for j in range(numberOfLandmarks):
         if j == 0: 
@@ -57,6 +58,7 @@ if __name__ == "__main__":
             currDists, _ = dijkstra(E, V, W, lat, lon, startNode, 0)
 
             firstLandmark = max(currDists, key = currDists.get)
+            landmarks.append(firstLandmark)
             print('New landmark --> ', firstLandmark)
 
             currDists, _ = dijkstra(E, V, W, lat, lon, firstLandmark, 0)
@@ -75,12 +77,18 @@ if __name__ == "__main__":
                     minDists[i] = min(distances[i], minDists.get(i, np.nan))
 
             newLandmark = max(minDists, key=minDists.get)
+            landmarks.append(newLandmark)
             print('New landmark --> ', newLandmark)
             currDists, currPrevs = dijkstra(E, V, W, lat, lon, newLandmark, 0)
             currDistsRev, _ = dijkstra(E_rev, V_rev, W_rev, lat, lon, newLandmark, 0)
             with open(f'{FOLDERPATH}/L{j}.txt', 'w') as L:
                 for i in range(numberOfVertices):
                     L.write(f'{currDists.get(i, "nan")},{currDistsRev.get(i, "nan")}\n')
+                    
+    with open(f'{FOLDERPATH}/landmarkIDs.txt', 'w') as L:
+                for landmark in landmarks:
+                    L.write(f'{landmark}\n')
+
 
     ENDTIME = time.time()
     print(f'Took {ENDTIME - STARTTIME} seconds to run')
