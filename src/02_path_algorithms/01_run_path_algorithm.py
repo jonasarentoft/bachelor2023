@@ -19,6 +19,7 @@ from common.algorithms.Dijkstra import dijkstra
 from common.algorithms.A_star import a_star
 from common.algorithms.Bidirectional import bidirectional
 from common.algorithms.Bidirectional_A_Star import bidirectional_a_star
+from common.algorithms.ALT import alt
 
 from common.GetAddress import GetAddress
 from common.GetDataForBidrectional import GetDataForBidirectional
@@ -34,6 +35,7 @@ if __name__ == "__main__":
     parser.add_argument('--end-node', dest='ENDNODE', help='Wanted end node.', required=True)
     parser.add_argument('--country', dest='COUNTRY', required=True)
     parser.add_argument('--algorithm', dest='ALGORITHM', required=True)
+    parser.add_argument('--N', dest='N', required=False)
     args = parser.parse_args()
 
     STARTTIME = time.time()
@@ -52,7 +54,8 @@ if __name__ == "__main__":
     algorithms = {'dijkstra':dijkstra, 
                   'a_star':a_star, 
                   'bidirectional':bidirectional,
-                  'bidirectional_a_star':bidirectional_a_star}
+                  'bidirectional_a_star':bidirectional_a_star,
+                  'alt':alt}
     
     file = f'{FILEPATH}/{FOLDERNAME}/nodesAndPositions.txt'
             
@@ -82,13 +85,34 @@ if __name__ == "__main__":
         
         distancesDict, nodesInShortestPath, totalDistance  = GetDataForBidirectional(forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, intersection)
         
-    else:
+    elif algorithm in ['dijkstra', 'a_star']:
         ALGORITMSTARTTIME = time.time()
         distancesDict, previousDict = algorithms[algorithm](E, V, W, lat, lon, wantedStartNode, wantedEndNode)
         ALGORITMENDTIME = time.time()
         
         nodesInShortestPath = GetPath(wantedEndNode, previousDict)
         totalDistance = distancesDict.get(wantedEndNode)
+        
+    elif algorithm == 'alt':
+        N = int(args.N)
+        distancesToLandmarks = {}
+        distancesFromLandmarks = {}
+        for i in range(N):
+    
+            fileName = f'{FILEPATH}/{FOLDERNAME}/landmarks/L{i}.txt'
+            distancesToLandmarks[i] = np.loadtxt(fileName, delimiter=',', usecols=(1), unpack=True, dtype=np.float32)
+            print(f'Loaded Distances to Landmarks for node {i}')
+            distancesFromLandmarks[i] = np.loadtxt(fileName, delimiter=',', usecols=(0), unpack=True, dtype=np.float32)
+            print(f'Loaded Distances from Landmarks for node {i}')
+            
+        ALGORITMSTARTTIME = time.time()
+        distancesDict, previousDict = algorithms[algorithm](E, V, W, lat, lon, wantedStartNode, wantedEndNode, distancesToLandmarks, distancesFromLandmarks)
+        ALGORITMENDTIME = time.time()
+            
+        nodesInShortestPath = GetPath(wantedEndNode, previousDict)
+        totalDistance = distancesDict.get(wantedEndNode)
+            
+            
         
     print(f'Number of nodes in shortest path: {len(nodesInShortestPath)}({algorithm})')
     
@@ -109,25 +133,76 @@ if __name__ == "__main__":
         except:
             totalDistance = 0
     
-    maxLat = max(lat) + 0.5
-    minLat = min(lat) - 0.5
-    maxLon = max(lon) + 0.5
-    minLon = min(lon) - 0.5
+    maxLat = max(lat)
+    minLat = min(lat)
+    maxLon = max(lon)
+    minLon = min(lon)
     
-    xScaler = 3000 / (maxLon - minLon)
-    yScaler = 3000 / (maxLat - minLat)
     
-    wantedStartNodeCoords = [xScaler * (lon[wantedStartNode] - minLon), 3000 - yScaler * (lat[wantedStartNode] - minLat)]
-    wantedEndNodeCoords = [xScaler * (lon[wantedEndNode] - minLon), 3000 - yScaler * (lat[wantedEndNode] - minLat)]
     
-    #startCity = GetAddress(lon[wantedStartNode], lat[wantedStartNode])
-    #endCity = GetAddress(lon[wantedEndNode], lat[wantedEndNode]) 
+    
+    newMaxLat = maxLat + 0.5
+    newMinLat = minLat - 0.5
+    newMaxLon = maxLon + 0.5
+    newMinLon = minLon - 0.5
+    
+    
+    xScaler = 3000 / (newMaxLon - newMinLon)
+    yScaler = 3000 / (newMaxLat - newMinLat)
+    
+    ####### corners for landmarks
+    
+    k = 5
+    stepLon = (maxLon - minLon) / k
+    stepLat = (maxLat - minLat) / k
+    ys = []
+    xs = []
+    randomxs = []
+    randomys = []
+
+    for i in range(k + 1):
+        for j in range(k + 1):
+        
+            ys.append(minLat + i * stepLat)
+            xs.append(minLon + j * stepLon)
+                
+                
+    for i in range(k):
+        for j in range(k):
+        
+            ys.append(minLat + i * stepLat)
+            xs.append(minLon + j * stepLon)
+            
+            lowerLonBound = minLon + stepLon * i
+            upperLonBound = minLon + stepLon * (i + 1)
+        
+            lowerLatBound =  minLat + stepLat * j
+            upperLatBound =  minLat + stepLat * (j+1)
+            
+            newDf = df.query('@lowerLonBound < x < @upperLonBound and @lowerLatBound < y < @upperLatBound')
+            if len(newDf) > 0:
+                randomSample = newDf.sample()
+                
+                randomxs.append(randomSample['x'])
+                randomys.append(randomSample['y'])
+                
+    
+    
+    xs = [xScaler * (x - newMinLon) for x in xs]
+    ys = [3000 - yScaler * (y - newMinLat) for y in ys]
+    
+    randomxs = [xScaler * (x - newMinLon) for x in randomxs]
+    randomys = [3000 - yScaler * (y - newMinLat) for y in randomys]
+    
+
+    wantedStartNodeCoords = [xScaler * (lon[wantedStartNode] - newMinLon), 3000 - yScaler * (lat[wantedStartNode] - newMinLat)]
+    wantedEndNodeCoords = [xScaler * (lon[wantedEndNode] - newMinLon), 3000 - yScaler * (lat[wantedEndNode] - newMinLat)]
     
     startAndEndPoints = pd.DataFrame([wantedStartNodeCoords, wantedEndNodeCoords], columns = ['x', 'y'])
     
     searchedPoints = pd.DataFrame(points, columns = ['x', 'y'])
     
-    cvs = ds.Canvas(plot_width=3000, plot_height=3000, x_range=(minLon, maxLon), y_range=(minLat, maxLat))
+    cvs = ds.Canvas(plot_width=3000, plot_height=3000, x_range=(newMinLon, newMaxLon), y_range=(newMinLat, newMaxLat))
     agg = cvs.points(df, 'x', 'y')  # this is the histogram
     agg1 = cvs.line(source = positionsOfNodesInShortesPathDF, x = 'x', y = 'y', line_width=5)#, line_width=5)
     agg2 = cvs.points(searchedPoints, 'x', 'y')
@@ -143,6 +218,8 @@ if __name__ == "__main__":
     
     plt.scatter(wantedStartNodeCoords[0], wantedStartNodeCoords[1], color = 'green', s = 4)
     plt.scatter(wantedEndNodeCoords[0],wantedEndNodeCoords[1], color = 'blue', s = 4)
+    #plt.scatter(xs, ys, color = 'white', s = 4, marker="+")
+    #plt.scatter(randomxs, randomys, color = 'orange', s = 3, marker="D")
     
     plt.gcf().set_facecolor("black")
     plt.axis('off')

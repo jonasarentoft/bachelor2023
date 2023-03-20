@@ -11,8 +11,7 @@ def bidirectional_a_star(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endN
     intersection = False
     forwardDistances = {}
     forwardPrevious = {}
-    fh = {}
-    bh = {}
+
     forwardDistances[startNode] = 0
     latEndNode = lat[endNode]
     lonEndNode = lon[endNode]
@@ -22,8 +21,7 @@ def bidirectional_a_star(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endN
     backwardDistances[endNode] = 0
     
     u = 100000
-    kf = 0
-    kb = 0    
+
     while forwardHeap or backwardHeap:
         if forwardHeap:
             curr_prio, currForwardDist, currForwardNode = hq.heappop(forwardHeap)
@@ -84,6 +82,9 @@ def bidirectional_a_star(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endN
                     backwardPrevious[toNode] = currBackwardNode
 
                     hq.heappush(backwardHeap, (priority, new_dist, toNode))
+                    
+        if not forwardHeap or not backwardHeap:
+            return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, None
 
         if u <= max(forwardHeap[0][0], backwardHeap[0][0]):
             return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, intersection

@@ -20,10 +20,9 @@ def a_star(E, V, W, lat, lon, startNode, endNode):
 
             return distances, previous
 
-        try:
-            r = range(V[curr_node], V[curr_node+1])
-        except:
-            r = range(V[curr_node], len(E))
+ 
+        r = range(V[curr_node], V[curr_node+1])
+     
 
         for i in r:
             

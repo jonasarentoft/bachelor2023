@@ -22,10 +22,14 @@ preprocessing: get_nodes_in_highways get_positions_of_nodes create_plot get_edge
 
 ## Shortest Path
 
+create_landmarks:
+	python 02_path_algorithms/00_landmarks_memoryEfficient.py --country ${COUNTRY} --number-of-landmarks ${N}
 
 
 # start = 1528652289
 # end = 10275888659
+
+
 
 dijkstra:
 	python 02_path_algorithms/01_run_path_algorithm.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY} --algorithm dijkstra
@@ -39,8 +43,11 @@ a_star:
 bidirectional_a_star:
 	python 02_path_algorithms/01_run_path_algorithm.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY} --algorithm bidirectional_a_star
 
+alt:
+	python 02_path_algorithms/01_run_path_algorithm.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY} --N ${N} --algorithm alt 
+
 
 plot:
 	python 02_path_algorithms/02_plot_results.py --country ${COUNTRY}
 
-run_all: dijkstra bidirectional a_star bidirectional_a_star
+run_all: dijkstra bidirectional a_star bidirectional_a_star 

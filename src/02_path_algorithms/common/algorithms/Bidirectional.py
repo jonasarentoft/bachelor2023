@@ -69,7 +69,6 @@ def bidirectional(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endNode):
             return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, None
         
         if u < forwardHeap[0][0] + backwardHeap[0][0]:
-            print((backwardDistances.keys() & forwardDistances.keys()))
             return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, intersection
         
     
