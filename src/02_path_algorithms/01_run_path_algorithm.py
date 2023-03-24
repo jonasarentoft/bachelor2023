@@ -20,6 +20,7 @@ from common.algorithms.A_star import a_star
 from common.algorithms.Bidirectional import bidirectional
 from common.algorithms.Bidirectional_A_Star import bidirectional_a_star
 from common.algorithms.ALT import alt
+from common.algorithms.Bidirectional_ALT import bidirectional_alt
 
 from common.GetAddress import GetAddress
 from common.GetDataForBidrectional import GetDataForBidirectional
@@ -35,7 +36,7 @@ if __name__ == "__main__":
     parser.add_argument('--end-node', dest='ENDNODE', help='Wanted end node.', required=True)
     parser.add_argument('--country', dest='COUNTRY', required=True)
     parser.add_argument('--algorithm', dest='ALGORITHM', required=True)
-    parser.add_argument('--N', dest='N', required=False)
+    parser.add_argument('--N', dest='N', const = 20, nargs='?')
     args = parser.parse_args()
 
     STARTTIME = time.time()
@@ -55,7 +56,8 @@ if __name__ == "__main__":
                   'a_star':a_star, 
                   'bidirectional':bidirectional,
                   'bidirectional_a_star':bidirectional_a_star,
-                  'alt':alt}
+                  'alt':alt,
+                  'bidirectional_alt':bidirectional_alt,}
     
     file = f'{FILEPATH}/{FOLDERNAME}/nodesAndPositions.txt'
             
@@ -70,6 +72,7 @@ if __name__ == "__main__":
     print(f'Loaded Vertices')
     W = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/W.txt', dtype=np.float32)
     print(f'Loaded Weights')
+    landmarks = []
     
     if algorithm in ['bidirectional', 'bidirectional_a_star']:
         E_rev = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/E_reversed.txt', dtype=int)
@@ -93,7 +96,7 @@ if __name__ == "__main__":
         nodesInShortestPath = GetPath(wantedEndNode, previousDict)
         totalDistance = distancesDict.get(wantedEndNode)
         
-    elif algorithm == 'alt':
+    elif algorithm in ['alt', 'bidirectional_alt']:
         N = int(args.N)
         distancesToLandmarks = {}
         distancesFromLandmarks = {}
@@ -108,14 +111,30 @@ if __name__ == "__main__":
             distancesFromLandmarks[i] = np.loadtxt(f'{fileName}/L{i}.txt', delimiter=',', usecols=(0), unpack=True, dtype=np.float32)
             print(f'Loaded Distances from Landmarks for node {i}')
             
-        ALGORITMSTARTTIME = time.time()
-        distancesDict, previousDict = algorithms[algorithm](E, V, W, lat, lon, wantedStartNode, wantedEndNode, distancesToLandmarks, distancesFromLandmarks)
-        ALGORITMENDTIME = time.time()
+        if algorithm == 'alt':
+            ALGORITMSTARTTIME = time.time()
+            distancesDict, previousDict = algorithms[algorithm](E, V, W, lat, lon, wantedStartNode, wantedEndNode, distancesToLandmarks, distancesFromLandmarks)
+            ALGORITMENDTIME = time.time()
+            print('hej')
+            nodesInShortestPath = GetPath(wantedEndNode, previousDict)
+            totalDistance = distancesDict.get(wantedEndNode)
+                
+        else:
+            E_rev = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/E_reversed.txt', dtype=int)
+            print(f'Loaded Reversed Edges')
+            V_rev = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/V_reversed.txt', dtype=int)
+            print(f'Loaded Reversed Vertices')
+            W_rev = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/W_reversed.txt', dtype=np.float32)
+            print(f'Loaded Reversed Weights')
             
-        nodesInShortestPath = GetPath(wantedEndNode, previousDict)
-        totalDistance = distancesDict.get(wantedEndNode)
+            ALGORITMSTARTTIME = time.time()
+            forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, intersection = algorithms[algorithm](E, V, W, E_rev, V_rev, W_rev, wantedStartNode, wantedEndNode, distancesToLandmarks, distancesFromLandmarks)
+            ALGORITMENDTIME = time.time()
+            
+            distancesDict, nodesInShortestPath, totalDistance  = GetDataForBidirectional(forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, intersection)
             
             
+                
         
     print(f'Number of nodes in shortest path: {len(nodesInShortestPath)}({algorithm})')
     
@@ -136,13 +155,12 @@ if __name__ == "__main__":
         except:
             totalDistance = 0
     
+    
+    
     maxLat = max(lat)
     minLat = min(lat)
     maxLon = max(lon)
     minLon = min(lon)
-    
-    
-    
     
     newMaxLat = maxLat + 0.5
     newMinLat = minLat - 0.5
