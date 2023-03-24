@@ -65,7 +65,8 @@ if __name__ == "__main__":
             currDistsRev, _ = dijkstra(E_rev, V_rev, W_rev, lat, lon, firstLandmark, 0)
             with open(f'{FOLDERPATH}/L{j}.txt', 'w') as L:
                 for i in range(numberOfVertices):
-                    L.write(f'{currDists.get(i, "nan")},{currDistsRev.get(i, "nan")}\n')
+                    #L.write(f'{currDists.get(i, "nan")},{currDistsRev.get(i, "nan")}\n')
+                    L.write(f'{currDists.get(i, 0)},{currDistsRev.get(i, 0)}\n')
 
         else:
             minDists = {}
@@ -83,7 +84,8 @@ if __name__ == "__main__":
             currDistsRev, _ = dijkstra(E_rev, V_rev, W_rev, lat, lon, newLandmark, 0)
             with open(f'{FOLDERPATH}/L{j}.txt', 'w') as L:
                 for i in range(numberOfVertices):
-                    L.write(f'{currDists.get(i, "nan")},{currDistsRev.get(i, "nan")}\n')
+                    #L.write(f'{currDists.get(i, "nan)},{currDistsRev.get(i, "nan")}\n')
+                    L.write(f'{currDists.get(i, 0)},{currDistsRev.get(i, 0)}\n')
                     
     with open(f'{FOLDERPATH}/landmarkIDs.txt', 'w') as L:
                 for landmark in landmarks:

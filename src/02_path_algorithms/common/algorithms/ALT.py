@@ -9,17 +9,9 @@ def alt(E, V, W, lat, lon, startNode, endNode, distancesToLandmarks, distancesFr
     distances[startNode] = 0
     hq.heappush(heap, (0,0, startNode))
     
-    pathExists = any([not np.isnan(distancesToLandmarks[landmark][startNode]) and not np.isnan(distancesFromLandmarks[landmark][endNode]) for landmark in distancesFromLandmarks])
-    print(pathExists)
-    
-    
-    if not pathExists:
-        return distances, previous
-    
-    latEndNode = lat[endNode]
-    lonEndNode = lon[endNode]
+
     while heap:
-        curr_prio, curr_dist, curr_node = hq.heappop(heap)
+        _, curr_dist, curr_node = hq.heappop(heap)
 
         
         if curr_node == endNode:
@@ -40,14 +32,10 @@ def alt(E, V, W, lat, lon, startNode, endNode, distancesToLandmarks, distancesFr
                 distances[toNode] = new_dist
                 previous[toNode] = curr_node
                 
-                latToNode = lat[toNode]
-                lonToNode = lon[toNode]
-                
-                
                 pi_plus = max([distancesToLandmarks[landmark][toNode] - distancesToLandmarks[landmark][endNode] for landmark in distancesToLandmarks])
                 pi_minus = max([distancesFromLandmarks[landmark][endNode] - distancesFromLandmarks[landmark][toNode] for landmark in distancesFromLandmarks])
-                pi_plus = np.nan_to_num(pi_plus, 0)
-                pi_minus = np.nan_to_num(pi_minus, 0)
+                #pi_plus = np.nan_to_num(pi_plus, 0)
+                #pi_minus = np.nan_to_num(pi_minus, 0)
                 
                 heuristic = max(pi_plus,pi_minus)
                 

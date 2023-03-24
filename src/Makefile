@@ -46,8 +46,11 @@ bidirectional_a_star:
 alt:
 	python 02_path_algorithms/01_run_path_algorithm.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY} --N ${N} --algorithm alt 
 
+bidirectional_alt:
+	python 02_path_algorithms/01_run_path_algorithm.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY} --N ${N} --algorithm bidirectional_alt 
+
 
 plot:
 	python 02_path_algorithms/02_plot_results.py --country ${COUNTRY}
 
-run_all: dijkstra bidirectional a_star bidirectional_a_star 
+run_all: dijkstra bidirectional a_star bidirectional_a_star alt bidirectional_alt
