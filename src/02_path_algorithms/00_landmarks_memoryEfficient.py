@@ -23,22 +23,12 @@ if __name__ == "__main__":
     FOLDERPATH = f'{FILEPATH}/{FOLDERNAME}/landmarks'
     PATHEXISTS = os.path.exists(FOLDERPATH)
         
+    numberOfLandmarks = int(args.N)
+
     if not PATHEXISTS:
         # Create a new directory because it does not exist
         os.makedirs(FOLDERPATH)
 
-
-
-    numberOfLandmarks = int(args.N)
-    file = f'{FILEPATH}/{FOLDERNAME}/nodesAndPositions.txt'
-    
-
-    
-    lat, lon = np.loadtxt(file, delimiter=',', usecols=(2, 3), unpack=True, dtype=np.float32)
-    print(f'Loaded Lat and Lon')
-        
-    df = pd.DataFrame({'x': lon, 'y': lat})
-    
     E = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/E.txt', dtype=int)
     E_rev = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/E_reversed.txt', dtype=int)
     print(f'Loaded Edges')
@@ -55,17 +45,17 @@ if __name__ == "__main__":
     for j in range(numberOfLandmarks):
         if j == 0: 
             startNode = random.randrange(numberOfVertices)
-            currDists, _ = dijkstra(E, V, W, lat, lon, startNode, 0)
+            currDists, _ = dijkstra(E, V, W, 0, 0, startNode, 0)
 
             firstLandmark = max(currDists, key = currDists.get)
             landmarks.append(firstLandmark)
             print('New landmark --> ', firstLandmark)
 
-            currDists, _ = dijkstra(E, V, W, lat, lon, firstLandmark, 0)
-            currDistsRev, _ = dijkstra(E_rev, V_rev, W_rev, lat, lon, firstLandmark, 0)
+            currDists, _ = dijkstra(E, V, W, 0, 0, firstLandmark, 0)
+            currDistsRev, _ = dijkstra(E_rev, V_rev, W_rev, 0, 0, firstLandmark, 0)
             with open(f'{FOLDERPATH}/L{j}.txt', 'w') as L:
                 for i in range(numberOfVertices):
-                    L.write(f'{currDists.get(i, "nan")},{currDistsRev.get(i, "nan")}\n')
+                    L.write(f'{currDists.get(i, 0)},{currDistsRev.get(i, 0)}\n')
 
         else:
             minDists = {}
@@ -79,11 +69,11 @@ if __name__ == "__main__":
             newLandmark = max(minDists, key=minDists.get)
             landmarks.append(newLandmark)
             print('New landmark --> ', newLandmark)
-            currDists, currPrevs = dijkstra(E, V, W, lat, lon, newLandmark, 0)
-            currDistsRev, _ = dijkstra(E_rev, V_rev, W_rev, lat, lon, newLandmark, 0)
+            currDists, currPrevs = dijkstra(E, V, W, 0, 0, newLandmark, 0)
+            currDistsRev, _ = dijkstra(E_rev, V_rev, W_rev, 0, 0, newLandmark, 0)
             with open(f'{FOLDERPATH}/L{j}.txt', 'w') as L:
                 for i in range(numberOfVertices):
-                    L.write(f'{currDists.get(i, "nan")},{currDistsRev.get(i, "nan")}\n')
+                    L.write(f'{currDists.get(i, 0)},{currDistsRev.get(i, 0)}\n')
                     
     with open(f'{FOLDERPATH}/landmarkIDs.txt', 'w') as L:
                 for landmark in landmarks:

@@ -11,11 +11,15 @@ import numpy as np
 import pandas as pd
 import datashader as ds
 import colorcet as cc
+
+import pickle
+
 from PIL import Image as im
 
-from common.utility import GetPath
+from common.utility import GetPath, unpackPathCH, getIntersectNodeCH
 
 from common.algorithms.Dijkstra import dijkstra
+from common.algorithms.CH import dijkstraCH
 from common.algorithms.A_star import a_star
 from common.algorithms.Bidirectional import bidirectional
 from common.algorithms.Bidirectional_A_Star import bidirectional_a_star
@@ -70,6 +74,7 @@ if __name__ == "__main__":
     print(f'Loaded Vertices')
     W = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/W.txt', dtype=np.float32)
     print(f'Loaded Weights')
+    landmarks = []
     
     if algorithm in ['bidirectional', 'bidirectional_a_star']:
         E_rev = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/E_reversed.txt', dtype=int)
@@ -115,7 +120,44 @@ if __name__ == "__main__":
         nodesInShortestPath = GetPath(wantedEndNode, previousDict)
         totalDistance = distancesDict.get(wantedEndNode)
             
-            
+    
+    elif algorithm == 'ch':
+
+        E_rev = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/E_reversed.txt', dtype=int)
+        print(f'Loaded Reversed Edges')
+        V_rev = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/V_reversed.txt', dtype=int)
+        print(f'Loaded Reversed Vertices')
+        W_rev = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/W_reversed.txt', dtype=np.float32)
+        print(f'Loaded Reversed Weights')
+
+        fileName = F'{FILEPATH}/{FOLDERNAME}/contractionHiearchies'
+        
+        
+        with open(f'{fileName}/prio.pkl', 'rb') as f:
+            prio = pickle.load(f)
+        print(f'Loaded prio')
+        with open(f'{fileName}/shortCuts.pkl', 'rb') as f:
+            shortCuts = pickle.load(f)
+        print(f'Loaded shortCuts')
+        with open(f'{fileName}/shortCuts_rev.pkl', 'rb') as f:
+            shortCuts_rev = pickle.load(f)
+        print(f'Loaded Reversed shortCuts')
+
+
+        ALGORITMSTARTTIME = time.time()
+        distsUp, prevsUp = dijkstraCH(E, V, W, shortCuts, wantedStartNode, wantedEndNode, prio)
+        distsDown, prevsDown = dijkstraCH(E_rev, V_rev, W_rev, shortCuts_rev, wantedEndNode, wantedStartNode, prio)
+        ALGORITMENDTIME = time.time()
+
+        intersectNode = getIntersectNodeCH(distsUp, prevsUp, distsDown, prevsDown, shortCuts)
+        totalDistance = distsUp[intersectNode] + distsDown[intersectNode]
+
+
+        pathForward = unpackPathCH(prevsUp, wantedStartNode, intersectNode, shortCuts)
+        pathBackward = unpackPathCH(prevsDown, wantedEndNode, intersectNode, shortCuts_rev)
+
+        distancesDict, nodesInShortestPath, b = GetDataForBidirectional(distsUp, distsDown, prevsUp, prevsDown, intersectNode)
+        
         
     print(f'Number of nodes in shortest path: {len(nodesInShortestPath)}({algorithm})')
     

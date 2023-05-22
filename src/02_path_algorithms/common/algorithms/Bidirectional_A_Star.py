@@ -15,6 +15,8 @@ def bidirectional_a_star(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endN
     forwardDistances[startNode] = 0
     latEndNode = lat[endNode]
     lonEndNode = lon[endNode]
+    latStartNode = lat[startNode]
+    lonStartNode = lon[startNode]
 
     backwardDistances = {}
     backwardPrevious = {}
@@ -70,7 +72,7 @@ def bidirectional_a_star(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endN
                     
                     latToNode = lat[toNode]
                     lonToNode = lon[toNode]
-                    heuristic = DistanceFormula(latToNode, latEndNode, lonToNode, lonEndNode)
+                    heuristic = DistanceFormula(latToNode, latStartNode, lonToNode, lonStartNode)
                     
                     priority = new_dist + heuristic
 

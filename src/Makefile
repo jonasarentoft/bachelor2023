@@ -25,11 +25,14 @@ preprocessing: get_nodes_in_highways get_positions_of_nodes create_plot get_edge
 create_landmarks:
 	python 02_path_algorithms/00_landmarks_memoryEfficient.py --country ${COUNTRY} --number-of-landmarks ${N}
 
+contraction_preprocess:
+	python 02_path_algorithms/00_contraction_hiearchies_preprocess.py --country ${COUNTRY}
 
 # start = 1528652289
 # end = 10275888659
 
-
+avoid:
+	python 02_path_algorithms/landmarkAvoid.py --country ${COUNTRY} --number-of-landmarks ${N}
 
 dijkstra:
 	python 02_path_algorithms/01_run_path_algorithm.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY} --algorithm dijkstra
@@ -46,8 +49,11 @@ bidirectional_a_star:
 alt:
 	python 02_path_algorithms/01_run_path_algorithm.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY} --N ${N} --algorithm alt 
 
+ch:
+	python 02_path_algorithms/01_run_path_algorithm.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY} --algorithm ch
+
 
 plot:
 	python 02_path_algorithms/02_plot_results.py --country ${COUNTRY}
 
-run_all: dijkstra bidirectional a_star bidirectional_a_star 
+run_all: dijkstra bidirectional a_star bidirectional_a_star ch

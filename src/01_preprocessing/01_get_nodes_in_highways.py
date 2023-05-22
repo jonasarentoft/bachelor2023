@@ -58,11 +58,11 @@ if __name__ == "__main__":
                         nodes = [grandchild.attrib['ref'] for grandchild in child if grandchild.tag == 'nd']
 
                         if any(highway):
-                            print('her')
+                            
                             for node in nodes:
                                 ws = " " * (12 - len(str(node)))
                                 f.write(f'{ws}{node}\n')
-                                print(ws)
+                                
                                 
                 if event == 'end':
                     child.clear()
