@@ -25,7 +25,8 @@ preprocessing: get_nodes_in_highways get_positions_of_nodes create_plot get_edge
 create_landmarks:
 	python path_algorithms/00_landmarks_memoryEfficient.py --country ${COUNTRY} --number-of-landmarks ${N}
 
-
+contraction_preprocess:
+	python contraction_hiearchies/CHpreprocess.py --country ${COUNTRY}
 # start = 1528652289
 # end = 10275888659
 
@@ -48,6 +49,9 @@ alt:
 
 bidirectional_alt:
 	python path_algorithms/01_run_path_algorithm.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY} --N ${N} --landmarks ${LANDMARKS} --algorithm bidirectional_alt 
+
+ch:
+	python path_algorithms/01_run_path_algorithm.py --start-node ${STARTNODE} --end-node ${ENDNODE} --country ${COUNTRY} --algorithm ch
 
 
 plot:
