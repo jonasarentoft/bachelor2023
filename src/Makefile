@@ -57,4 +57,4 @@ ch:
 plot:
 	python path_algorithms/02_plot_results.py --country ${COUNTRY}
 
-run_all: dijkstra bidirectional a_star bidirectional_a_star alt bidirectional_alt
+run_all: dijkstra bidirectional a_star bidirectional_a_star alt bidirectional_alt ch
