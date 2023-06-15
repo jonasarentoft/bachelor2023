@@ -207,8 +207,6 @@ if __name__ == "__main__":
         except:
             totalDistance = 0
     
-    
-    
     maxLat = max(lat)
     minLat = min(lat)
     maxLon = max(lon)
@@ -283,26 +281,14 @@ if __name__ == "__main__":
     plt.annotate('t', (wantedEndNodeCoords[0], wantedEndNodeCoords[1]), size=3, ha='center', va = 'center', color = 'white')
 
     plt.scatter(randomxs, randomys, color = 'orange', s = 17, marker="D", edgecolors = 'orange', linewidth = 0.2)
-    #plt.xlim(0.00001,5)
-    #plt.scatter(rposx, rposy, color = 'pink', s = 8, marker="D", edgecolors = 'black', linewidth = 0.2)
+
     n = range(1, len(randomxs)+1)
     for i, number in enumerate(n):
         plt.annotate(number, (randomxs[i], randomys[i]), size=3, ha='center', va = 'center', color ='white')
-    #    if LANDMARKS == 'avoid':
-            #plt.annotate(number, (rposx[i], rposy[i]), size=2, ha='center', va = 'center', color = 'white')
+
     
     plt.gcf().set_facecolor("white")
     plt.axis('off')
-    #plt.suptitle(f'{wantedStartNode} ⇒ {wantedEndNode}', fontweight = 'bold', horizontalalignment = 'center', color = 'black')
-
-    # if positionsOfNodesInShortesPath:
-    #     plt.title(f'Total travel distance: {totalDistance}km', style = 'italic', fontsize = 12, loc = 'center', color ='black')
-    # else:
-    #     plt.title(f
-    # 'Found no path', style = 'italic',color ='black')
-    #plt.xlim(-100, 2000)
-    #plt.ylim(3100, -100)
-
     
     plt.savefig(f'../data/plots/{FOLDERNAME}/{specifiedAlgorithm}.png', bbox_inches='tight', dpi = 3000)
 
