@@ -3,7 +3,7 @@ from common.DistanceFormula import DistanceFormula
 import math
 from common.Timer import *
 
-@timer
+
 def a_star(E, V, W, lat, lon, startNode, endNode):
     heap = []
     distances = {}
@@ -20,7 +20,6 @@ def a_star(E, V, W, lat, lon, startNode, endNode):
 
         
         if curr_node == endNode:
-
             return distances, previous
 
  
@@ -42,7 +41,12 @@ def a_star(E, V, W, lat, lon, startNode, endNode):
                 latToNode = lat[toNode]
                 lonToNode = lon[toNode]
                 
+                latCurrNode = lat[curr_node]
+                lonCurrNode = lon[curr_node]
+                
                 heuristic = DistanceFormula(latToNode, latEndNode, lonToNode, lonEndNode)
+                
+                h1 = DistanceFormula(latCurrNode, latEndNode, lonCurrNode, lonEndNode)
                 
                 heuristics[toNode] = heuristic
                 

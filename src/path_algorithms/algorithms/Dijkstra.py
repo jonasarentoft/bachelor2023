@@ -1,7 +1,7 @@
 import heapq as hq
 from common.Timer import *
 
-@timer
+
 def dijkstra(E, V, W, lat, lon, startNode, endNode):
     heap = []
     distances = {}
@@ -12,10 +12,13 @@ def dijkstra(E, V, W, lat, lon, startNode, endNode):
 
     while heap:
         curr_dist, curr_node = hq.heappop(heap)
-        
         if curr_node == endNode:
 
             return distances, previous
+        
+        # if curr_node == endNode:
+
+        #     return distances, previous
         
         try:
             r = range(V[curr_node], V[curr_node+1])

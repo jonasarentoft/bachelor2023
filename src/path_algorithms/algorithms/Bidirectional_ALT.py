@@ -3,7 +3,7 @@ from common.GetPath import GetPath
 from common.DistanceFormula import DistanceFormula
 from common.Timer import *
 
-@timer
+
 def bidirectional_alt(E, V, W, E_rev, V_rev, W_rev, startNode, endNode, distancesToLandmarks, distancesFromLandmarks):
     forwardHeap = []
     backwardHeap = []
@@ -21,6 +21,14 @@ def bidirectional_alt(E, V, W, E_rev, V_rev, W_rev, startNode, endNode, distance
     backwardDistances[endNode] = 0
     
     u = 100000
+    
+    
+    pi_plus = max([distancesFromLandmarks[landmark][endNode] - distancesFromLandmarks[landmark][startNode] for landmark in distancesToLandmarks])
+    pi_minus = max([distancesToLandmarks[landmark][startNode] - distancesToLandmarks[landmark][endNode] for landmark in distancesFromLandmarks])
+    #pi_plus = np.nan_to_num(pi_plus, 0)
+    #pi_minus = np.nan_to_num(pi_minus, 0)
+    
+    start_heuristic = max(pi_plus,pi_minus)
     
     while forwardHeap or backwardHeap:
         if forwardHeap:
@@ -91,6 +99,7 @@ def bidirectional_alt(E, V, W, E_rev, V_rev, W_rev, startNode, endNode, distance
                     
         if not forwardHeap or not backwardHeap:
             return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, None
-
+        #if u + start_heuristic <= forwardHeap[0][1] + backwardHeap[0][1]:
         if u <= max(forwardHeap[0][0], backwardHeap[0][0]):
+            print(len(forwardDistances) + len(backwardDistances))
             return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, intersection

@@ -3,7 +3,7 @@ import math
 import numpy as np
 from common.Timer import *
 
-@timer
+
 def alt(E, V, W, lat, lon, startNode, endNode, distancesToLandmarks, distancesFromLandmarks):
     heap = []
     distances = {}

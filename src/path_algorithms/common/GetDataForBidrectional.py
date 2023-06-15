@@ -6,7 +6,7 @@ def GetDataForBidirectional(forwardDistances, backwardDistances, forwardPrevious
     
         path = GetPath(intersection, backwardPrevious)[::-1] + GetPath(intersection, forwardPrevious)[1:]
         distance = forwardDistances.get(intersection) + backwardDistances.get(intersection)
-        return (forwardDistances | backwardDistances), path, distance
+        return (forwardDistances | backwardDistances), path, round(distance,5)
     
     else:
         return (forwardDistances | backwardDistances), [], None 

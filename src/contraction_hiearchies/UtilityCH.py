@@ -4,6 +4,13 @@ def initOrder(V, E, Weights, V_rev, E_rev, Weights_rev, shortCuts):
     heap = []
 
     for v in range(len(V) - 1):
+        
+        if v == len(V) // 4:
+            print('quarter')
+            
+        if v == len(V) // 2:
+            print('half')
+        
         Ax = 0 # number of shortcuts added
         prio = {}
         prio[v] = 1

@@ -3,7 +3,7 @@ from common.GetPath import GetPath
 from common.DistanceFormula import DistanceFormula
 from common.Timer import *
 
-@timer
+
 def bidirectional_a_star(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endNode):
     forwardHeap = []
     backwardHeap = []
@@ -30,6 +30,9 @@ def bidirectional_a_star(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endN
         if forwardHeap:
             curr_prio, currForwardDist, currForwardNode = hq.heappop(forwardHeap)
             
+            if currForwardNode == endNode:
+                return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, intersection
+            
             r = range(V[currForwardNode], V[currForwardNode+1])
             
 
@@ -40,6 +43,9 @@ def bidirectional_a_star(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endN
                 
                 distToNode = forwardDistances.get(toNode)
                 new_dist = currForwardDist + dist
+                
+    
+                
                 if distToNode == None or distToNode > new_dist:
                     
                     latToNode = lat[toNode]
@@ -54,10 +60,17 @@ def bidirectional_a_star(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endN
                         intersection = toNode
                         u = backwardDistances.get(toNode) + new_dist
                     
+                    if not backwardDistances.get(toNode):
+                        hq.heappush(forwardHeap, (priority, new_dist, toNode))
                     
-                    hq.heappush(forwardHeap, (priority, new_dist, toNode))
+                    
+                    
+                    
         if backwardHeap:
             curr_prio, currBackwardDist, currBackwardNode = hq.heappop(backwardHeap)
+            
+            if currBackwardNode == startNode:
+                return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, intersection
 
             
             r = range(V_rev[currBackwardNode], V_rev[currBackwardNode+1])
@@ -70,11 +83,16 @@ def bidirectional_a_star(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endN
 
                 distToNode = backwardDistances.get(toNode)
                 new_dist = currBackwardDist + dist
+                
+    
+                    
+                
+                
                 if distToNode == None or distToNode > new_dist:
                     
                     latToNode = lat[toNode]
                     lonToNode = lon[toNode]
-                    heuristic = DistanceFormula(latToNode, latEndNode, lonToNode, lonEndNode)
+                    heuristic = DistanceFormula(latToNode, latStartNode, lonToNode, lonStartNode)
                     
                     priority = new_dist + heuristic
 
@@ -85,11 +103,13 @@ def bidirectional_a_star(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endN
                     backwardDistances[toNode] = new_dist
                     backwardPrevious[toNode] = currBackwardNode
 
-                    hq.heappush(backwardHeap, (priority, new_dist, toNode))
+                    if not forwardDistances.get(toNode):
+                        hq.heappush(backwardHeap, (priority, new_dist, toNode))
                     
         if not forwardHeap or not backwardHeap:
             return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, None
 
         if u <= max(forwardHeap[0][0], backwardHeap[0][0]):
+        
         #if u < forwardHeap[0][0] + backwardHeap[0][0]:
             return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, intersection

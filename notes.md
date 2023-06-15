@@ -1,10 +1,7 @@
-Vi gider ingen landmarks på øerne
-Godt at have landmarks i spidserne - helst noget der ligger bag queries, ikek midtvejs 
+# Feedback to flow-diagram
+* Arrows to indicate scan or sort
+* Indicate what boxes are you 
 
-Lav ny random landmark selection
-Lav ny avoid
-
-
-
-
-
+# Notes to CH
+* Save changes to after the shortcuts has been added
+* Save added shortcuts as adjacency list

@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import random
 
-from .path_algorithms.algorithms.Dijkstra import dijkstra
+from landmarksUtility import dijkstra
 
 if __name__ == "__main__":
     CURRENTTIME = datetime.now().strftime("%H:%M:%S")
@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     FILEPATH = f'../data/processed'
     FOLDERNAME = args.COUNTRY.lower()
-    FOLDERPATH = f'{FILEPATH}/{FOLDERNAME}/landmarks/landmarks_farthest'
+    FOLDERPATH = f'{FILEPATH}/{FOLDERNAME}/landmarks_farthest'
     PATHEXISTS = os.path.exists(FOLDERPATH)
         
     if not PATHEXISTS:
@@ -51,7 +51,6 @@ if __name__ == "__main__":
     
     numberOfVertices = len(V) - 1
     landmarks = []
-   
     for j in range(numberOfLandmarks):
         if j == 0: 
             startNode = random.randrange(numberOfVertices)
@@ -79,6 +78,7 @@ if __name__ == "__main__":
 
             newLandmark = max(minDists, key=minDists.get)
             landmarks.append(newLandmark)
+            
             print('New landmark --> ', newLandmark)
             currDists, currPrevs = dijkstra(E, V, W, lat, lon, newLandmark, 0)
             currDistsRev, _ = dijkstra(E_rev, V_rev, W_rev, lat, lon, newLandmark, 0)

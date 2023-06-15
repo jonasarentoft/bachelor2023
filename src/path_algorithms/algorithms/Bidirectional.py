@@ -3,7 +3,7 @@ from common.GetPath import GetPath
 import time
 from common.Timer import *
 
-@timer
+
 def bidirectional(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endNode):
     forwardHeap = []
     backwardHeap = []
@@ -66,7 +66,7 @@ def bidirectional(E, V, W, E_rev, V_rev, W_rev, lat, lon, startNode, endNode):
                 hq.heappush(backwardHeap, (new_dist, toNode))
 
         
-        if u < forwardHeap[0][0] + backwardHeap[0][0]:
+        if backwardHeap and forwardHeap and u < forwardHeap[0][0] + backwardHeap[0][0]:
             return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, intersection
         
     return forwardDistances, backwardDistances, forwardPrevious, backwardPrevious, None
