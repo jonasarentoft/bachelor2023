@@ -22,10 +22,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Specify path to processed data
-    # FILEPATH = f'../data/processed'
-    # FOLDERNAME = args.COUNTRY.lower()
-    FILEPATH = '/volumes/T7/jonas_bachelor2023'
-    FOLDERNAME = 'europe_data'
+    FILEPATH = f'../data/processed'
+    FOLDERNAME = args.COUNTRY.lower()
+    
+    #FILEPATH = '/volumes/T7/jonas_bachelor2023'
+    #FOLDERNAME = 'europe_data'
     print(time.time())
     
     FOLDERPATH = f'{FILEPATH}/{FOLDERNAME}/contractionHiearchies'

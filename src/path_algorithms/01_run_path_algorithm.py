@@ -48,11 +48,11 @@ if __name__ == "__main__":
     
     LANDMARKS = args.LANDMARKS
     
-    #FILEPATH = f'../data/processed'
-    #FOLDERNAME = args.COUNTRY.lower()
+    FILEPATH = f'../data/processed'
+    FOLDERNAME = args.COUNTRY.lower()
 
-    FILEPATH = '/volumes/T7/jonas_bachelor2023'
-    FOLDERNAME = 'europe_data'
+    #FILEPATH = '/volumes/T7/jonas_bachelor2023'
+    #FOLDERNAME = 'europe_data'
     
     wantedStartNode = int(args.STARTNODE)
     wantedEndNode = int(args.ENDNODE)
@@ -86,10 +86,6 @@ if __name__ == "__main__":
     rs = []
     landmarks = []
 
-
-
-
-#[107386, 28219, 41438, 135921, 46909, 150934, 147721, 75, 148848, 103426]
     
     if specifiedAlgorithm in ['bidirectional', 'bidirectional_a_star']:
         E_rev = np.loadtxt(f'{FILEPATH}/{FOLDERNAME}/E_reversed.txt', dtype=int)
